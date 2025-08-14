@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            border: 1px solid;
+            padding: 8px;
+        }
+        table{
+            border-collapse:collapse ;
+            margin-left: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+    <h2>View Users</h2>
+    </center>
+    <table>
+        <tr>
+        
+
+            <th>Si no</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>DOB</th>
+            <th>Email</th>
+            <th>Mobile.No</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Pincode</th>
+            <th>Created_at</th>
+            <th></th>
+        </tr>
+         
+          {% for i in val %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.UserName }}</td>
+            <td>{{ i.Gender}}</td>
+            <td>{{ i.DOB}}</td>
+            <td>{{ i.E_mail}}</td>
+            <td>{{ i.Phone}}</td>
+            <td>{{ i.Address }}</td>
+            <td>{{ i.City }}</td>
+            <td>{{ i.State}}</td>
+            <td>{{ i.Pincode}}</td>
+            <td>{{ i.Created_at}}</td>
+            <td><input type="button" value="View">
+                <input type="button" value="Edit">
+                <input type="button" value="Delete"></td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            
+            border: 2px solid;
+            padding:8px;
+       
+        }
+        table{
+            border-collapse:collapse ;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+    <h2>View Doctors Rating and Feedback </h2>
+    </center>
+    <table>
+        <tr>
+            <th>No</th>
+            <th>User name</th>
+            <th>Doctor name</th>
+            <th>Specialization</th>
+            <th>Rating</th>
+            <th>Feedback summary</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+        {% for i in val %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.USER }}</td>
+            <td>{{ i.DOCTOR }}</td>
+            <td>{{ i.Specialization }}</td>
+            <td>{{ i.Rating }}</td>
+            <td>{{ i.Comment }}</td>
+            <td>{{ i.Date }}</td>
+            <td>{{ i.Status}}</td>
+        </tr>
+         {% endfor %}
+            
+    </table>
+</body>
+</html>
