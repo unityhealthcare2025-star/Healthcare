@@ -24,21 +24,26 @@
             <th>No</th>
             <th>User name</th>
             <th>Against</th>
-            <th>Against_Type</th>
             <th>Subject</th>
             <th>Description</th>
             <th>Response</th>
+            <th>status</th>
 
         </tr>
+        {% for i in val %}
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.USER.UserName }}</td>
+            <td>{{ i.Against }}</td>
+            <td>{{ i.Subject }}</td>
+            <td>{{ i.Description }}</td>
+            <td>{{ i.Response }}</td>
+            <td>{{ i.Status }}</td>
+            
+            
         </tr>
+         {% endfor %}
+
     </table>
 </body>
 </html>

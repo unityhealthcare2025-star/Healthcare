@@ -52,9 +52,9 @@
             <td>{{ i.State}}</td>
             <td>{{ i.Pincode}}</td>
             <td>{{ i.Created_at}}</td>
-            <td><input type="button" value="View">
-                <input type="button" value="Edit">
-                <input type="button" value="Delete"></td>
+            <td>
+              
+                <a href="DeleteUser/{{ i.LOGIN.id }}">Delete</a>
 
         </tr>
         {% endfor %}

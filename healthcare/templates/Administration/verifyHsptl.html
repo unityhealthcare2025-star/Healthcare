@@ -46,10 +46,11 @@
             <td>{{ i.State }}</td>
             <td>{{ i.Pincode}}</td>
         
-            <td><input type="button" value="Accept">
-            <input type="button" value="Reject"></td>
+            <td><a href="AcceptHospital/{{ i.LOGIN.id }}">Accept</a>
+            <a href="RejectHospital/{{ i.LOGIN.id }}">Reject</a>
+        </td>
         </tr>
-        {% endfor %}
+         {% endfor %}
     </table>
 </body>
 </html>

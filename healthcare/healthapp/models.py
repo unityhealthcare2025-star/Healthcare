@@ -55,7 +55,7 @@ class FeedbackTable(models.Model):
     Date = models.DateTimeField(blank=True,null=True)
     Status =  models.CharField(max_length=10,blank=True,null=True)
 
-class ComplaintTbale(models.Model):
+class ComplaintTable(models.Model):
     USER = models.ForeignKey(UserTable,on_delete=models.CASCADE,blank=True,null=True)
     Against = models.CharField(max_length=30, blank=True,null=True)
     Subject =  models.CharField(max_length=100,blank=True,null=True)

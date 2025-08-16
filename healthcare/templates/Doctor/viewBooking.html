@@ -24,8 +24,8 @@
     <table>
         <tr>
             <th>No</th>
-            <th>User_id</th>
-            <th>Patient Name</th>
+            <th>User_name</th>
+            <th>Doctor</th>
             <th>Booking Date</th>
             <th>Booking Time</th>
             <th>Payment Status</th>
@@ -34,17 +34,21 @@
             <th>Status</th>
             
         </tr>
+         {% for i in val %}
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.USER.UserName }}</td>
+            <td>{{ i.DOCTOR.UserName }}</td>
+            <td>{{ i.Booking_date }}</td>
+            <td>{{ i.Booking_time }}</td>
+            <td>{{ i.Payment_status }}</td>
+            <td>{{ i.Amount }}</td>
+            <td>{{ i.Created_on }}</td>
+            <td>{{ i.Status }}</td>
+            
+            
         </tr>
+         {% endfor %}
     </table>
    
     </form>

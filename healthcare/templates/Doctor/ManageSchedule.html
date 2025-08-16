@@ -25,7 +25,7 @@
         <label>Start Time :</label>
         <input type="time"><br><br>
         <label>End Time :</label>
-        <input type="time"><br><br>
+        <input type="time" ><br><br>
         <label for="Status">Status :</label>
         <select id="status" name="status">
             <option value=""></option>
@@ -37,6 +37,7 @@
     </form>
     <h2>Current Schedule</h2>
     <table>
+        
         <tr>
              <th>Day</th>
              <th>Start Time</th>
@@ -44,14 +45,16 @@
              <th>Status</th>
              <th>Action</th>
         </tr>
+        {% for i in val %}
         <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{ i.Day_of_week }}</td>
+              <td>{{ i.Start_Time }}</td>
+              <td>{{ i.End_Time }}</td>
+              <td>{{ i.Status }}</td>
               <td><button class="edit-btn">Edit</button>
             <button class="delete-btn">Delete</button></td>
         </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

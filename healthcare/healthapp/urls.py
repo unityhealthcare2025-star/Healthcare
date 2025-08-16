@@ -10,8 +10,11 @@ urlpatterns = [
     path('', LoginPage.as_view(), name="LoginPage"),
     path("AdminHome", AdminHome.as_view(), name="AdminHome"),
     path("VerifyHospital", VerifyHospital.as_view(), name="VerifyHospital"),
+    path("AcceptHospital/<int:lid>", AcceptHospital.as_view(), name="AcceptHospital"),
+    path("RejectHospital/<int:lid>",RejectHospital.as_view(), name="RejectHospital"),
     path("ViewDoctorRating", ViewDoctorRating.as_view(), name="ViewDoctorRating"),
     path("ViewUser", ViewUser.as_view(), name="ViewUser"),
+    path("DeleteUser/<int:lid>", DeleteUser.as_view(), name="DeleteUser"),
  
 
 #///////////////////////// HOSPITAL //////////////////////////////

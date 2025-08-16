@@ -32,22 +32,24 @@
             <th>Added_On</th>
             <th><a href="AddDoctor.html">add</a></th>
         </tr>
+        {% for i in val %}
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.UserName }}</td>
+            <td>{{ i.DOB }}</td>
+            <td>{{ i.Gender }}</td>
+            <td>{{ i.Specialization }}</td>
+            <td>{{ i.Qualification  }}</td>
+            <td>{{ i.Experience_year }}</td>
+            <td>{{ i.E_mail }}</td>
+            <td>{{ i.Phone }}</td>
+            <td>{{ i.Added_on }}</td>
             <td><input type="button" value="Edit">
                 <input type="button" value="Delete">
                 <input type="button" value="Rating">
             </td>
         </tr>
+        {% endfor %}
     </table>
 
 </body>
