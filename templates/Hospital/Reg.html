@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <h2>Registration Form</h2>
+    </center>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Hospital_Name :</label>
+        <input type="text" name="UserName"><br><br>
+        <label>Registration No :</label>
+        <input type="text" name="Registration_no"><br><br>
+        <label>Hospital_Image :</label>
+        <input type="file" name="file"><br><br>
+        <label>Mobile.No :</label>
+        <input type="text" name="Phone"><br><br>
+        <label>Email_id:</label>
+        <input type="text" name="  E_mail"><br><br>
+        <label>Address :</label>
+        <textarea name="Address"></textarea><br><br>
+        <label>City:</label>
+        <input type="text" name="City"><br><br>
+        <label>State:</label>
+        <input type="text" name=" State"><br><br>
+        <label>Pincode:</label>
+        <input type="text" name="Pincode"><br><br>
+        <label>UserName:</label>
+        <input type="text" name="Username"><br><br>
+        <label>Password:</label>
+        <input type="text" name="Password"><br><br>
+        <button type="submit">Register</button>
+     </form>
+</body>
+</html>

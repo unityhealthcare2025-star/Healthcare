@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <h1>Edit Your Profile</h1>
+    </center>
+    <Img src="">
+        <center>
+        <p>Change Profile Picture</p>
+        </center>
+       
+        <label>Hospital_Name :</label>
+        <input type="text" value="{{ val.UserName }}" name="hospital_name"><br><br>
+        <label>Mobile.No :</label>
+        <input type="text" value="{{ val.Phone }}" name="mobile_no"><br><br>
+        <label>Email_id </label>
+        <input type="text" value="{{ val.E_mail}}" name="email_id"><br><br>
+        <label>Address :</label>
+        <textarea name="address">{{ val.Address }}</textarea><br><br>
+        <label>City:</label>
+        <input type="text" value="{{ val.City }}" name="city"><br><br>
+        <label>State:</label>
+        <input type="text" value="{{ val.State }}" name="state"><br><br>
+        <label>Pincode:</label>
+        <input type="text" value="{{ val.Pincode }}" name="pincode"><br><br>
+        <a href="/ChangePassword">
+        <input type="button" value="change password"><br><br></a>
+        <center>
+        <input type="submit" value="Save"  >       
+        </center>
+
+</body>
+</html>

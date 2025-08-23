@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <center>
+    <h1>Enroll Doctor</h1>
+</center>
+<form method="post">
+    {% csrf_token %}
+         <label>Doctor_Name :</label>
+        <input type="text" name="doctor_name"><br><br>
+        <label>DOB :</label>
+        <input type="date" name="DOB" ><br><br>
+        <label>Gender :</label>
+    <input type="radio" name="Gender" value="male">
+    <label>male</label>
+
+    <input type="radio" name="Gender" value="female">
+    <label>female</label>
+   
+    <input type="radio" name="Gender" value="other">
+    <label>other</label>
+    
+        <br><br>
+        <label>Specialization:</label>
+        <input type="text" name="Specialization"><br><br>
+        <label>Qualification:</label>
+        <input type="text" name="Qualification"><br><br>
+        <label>Experience :</label>
+        <input type="text" name="Experience_year" ><br><br>
+        <label>E-mail_id:</label>
+        <input type="text" name="E_mail"><br><br>
+        <label>Mobile.No:</label>
+        <input type="text" name="Phone" ><br><br>
+        <label>UserName:</label>
+        <input type="text" name="UserName" ><br><br>
+        <label>Password:</label>
+        <input type="text" name="Password" ><br><br>
+        <br><br>
+        <button type="submit">Enroll Doctor</button>
+        <button type="reset">Reset</button>
+     </form>
+</body>
+</html>

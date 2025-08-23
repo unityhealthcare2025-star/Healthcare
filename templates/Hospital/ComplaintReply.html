@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            
+            border: 2px solid;
+            padding:8px;
+       
+        }
+        table{
+            border-collapse:collapse ;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+    <h2>View Complaint And Send Reply</h2>
+    </center>
+    <table>
+    <tr>
+        <th>No</th>
+        <th>User Name</th>
+        <th>Doctor Name</th>
+        <th>Subject</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+     {% for i in val %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.USER.UserName }}</td>
+        <td>{{ i.Against }}</td>
+        <td>{{ i.Subject }}</td>
+        <td>{{ i.Description }}</td>
+        <td>{{ i.Status }}</td>
+        <td>
+            <a href="/Response"><input type="button" value="Reply"></a>
+        </td>
+    </tr>
+    {% endfor %}
+    </table><br>
+    <center>
+    <input type="button" value="Search">
+    <input type="button" value="Refresh">
+</center>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <h2>Update Your Profile</h2>
+    </center>
+    <form method="post">
+        {%%}
+        <label>Doctor_Name :</label>
+        <input type="text" value="{{ val.UserName }}" name="doctor_name"><br><br>
+        <label>DOB :</label>
+        <input type="date" value="{{ DOB }}" name="DOB"><br><br>
+
+       <label>Gender :</label>
+    <input type="radio" name="Gender" value="Male" {% if val.Gender == "Male" %} checked {% endif %}>
+    <label>male</label>
+    <input type="radio" name="Gender" value="Female"  {% if val.Gender == "Female" %} checked {% endif %}>
+    <lable>female</lable>
+    <input type="radio" name="Gender" value="Other"  {% if val.Gender == "Other" %} checked {% endif %}>
+    <label>other</label>
+    
+        <br><br>
+        <label>Specialization:</label>
+        <input type="text" value="{{ val.Specialization }}" name="spacialization"><br><br>
+        <label>Qualification:</label>
+        <input type="text" value="{{ val.Qualification }}" name="qualification"><br><br>
+        <label>Experience :</label>
+        <input type="text" value="{{ val.Experience_year}}" name="experience"><br><br>
+        <label>E-mail_id:</label>
+        <input type="text" value="{{ val.E_mail }}" name="email_id"><br> <br>
+        <label>Mobile.No:</label>
+        <input type="text" value="{{ val.Phone }}" name="mobile_no"><br><br>
+        <label>Added_On</label>
+        <input type="text" value="{{ val.Added_on }}" name="added_on">
+        <br><br>
+         <label>Change password:</label>
+        <input type="password"><br><br>
+        <button type="submit">Save</button>
+        <button type="reset">Reset</button>
+     </form>
+</body>
+</html>

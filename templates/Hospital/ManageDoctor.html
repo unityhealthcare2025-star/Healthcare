@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            
+            border: 2px solid;
+            padding:8px;
+       
+        }
+        table{
+            border-collapse:collapse ;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Manage Doctors</h1></center>
+    <table>
+        <tr>
+            <th>Doctor_id</th>
+            <th>Doctor_Name</th>
+            <th>DOB</th>
+            <th>Gender</th>
+            <th>Specialization</th>
+            <th>Qualification</th>
+            <th>Experience</th>
+            <th>E_mail</th>
+            <th>Mobile_No</th>
+            <th>Added_On</th>
+            <th><a href="AddDoctor">add</a></th>
+        </tr>
+        {% for i in val %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.UserName }}</td>
+            <td>{{ i.DOB }}</td>
+            <td>{{ i.Gender }}</td>
+            <td>{{ i.Specialization }}</td>
+            <td>{{ i.Qualification  }}</td>
+            <td>{{ i.Experience_year }}</td>
+            <td>{{ i.E_mail }}</td>
+            <td>{{ i.Phone }}</td>
+            <td>{{ i.Added_on }}</td>
+            <td>
+               <a href="/EditDoctor/{{ i.id }}"><input type="button" value ="Edit"></a>
+               <a href="/DeleteDoctor/{{ i.id }}"><input type="button" value ="Delete"></a>
+               
+            </td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

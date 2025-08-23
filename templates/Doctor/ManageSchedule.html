@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            
+            border: 2px solid;
+            padding:8px;
+       
+        }
+        table{
+            border-collapse:collapse ;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Schedule</h1></center>
+    <form>
+        <label>Day Of Week :</label>
+        <input type="text" name="dayOfWeek"><br><br>
+        <label>Start Time :</label>
+        <input type="time" name="startTime"><br><br>
+        <label>End Time :</label>
+        <input type="time" name="endTime"><br><br>
+        <label for="Status">Status :</label>
+        <select id="status" name="status">
+            <option value=""></option>
+            <option value="Active" >Active</option>
+            <option value="Inactive" >Inactive</option>
+            <option value="Holiday" >Holiday</option>
+        </select><br><br>
+    <center><button type="submit">Save</button> </center>
+    </form>
+    <h2>Current Schedule</h2>
+    <table>
+        
+        <tr>
+             <th>Day</th>
+             <th>Start Time</th>
+             <th>End Time</th>
+             <th>Status</th>
+             <th>Action</th>
+        </tr>
+        {% for i in val %}
+        <tr>
+              <td>{{ i.Day_of_week }}</td>
+              <td>{{ i.Start_Time }}</td>
+              <td>{{ i.End_Time }}</td>
+              <td>{{ i.Status }}</td>
+              <td><button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
