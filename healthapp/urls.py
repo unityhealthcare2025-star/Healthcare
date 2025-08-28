@@ -24,20 +24,23 @@ urlpatterns = [
    path("ChangePassword", ChangePassword.as_view(), name="ChangePassword"),
    path("AddDoctor", AddDoctor.as_view(), name="AddDoctor"),
    path("ComplaintReply", ComplaintReply.as_view(), name="ComplaintReply"),
+   path("CompReply/<int:c_id>", CompReply.as_view(), name="CompReply"),
+   path("SearchComplaint", SearchComplaint.as_view(), name="SearchComplaint"),
    path("ManageDoctor", ManageDoctor.as_view(), name="ManageDoctor"),
    path("Response", Response.as_view(), name="Response"),
    path("UpdateProfile", UpdateProfile.as_view(), name="UpdateProfile"),
    path("viewProfile", viewProfile.as_view(), name="viewProfile"),
    path('DeleteDoctor/<int:lid>/', DeleteDoctor.as_view(), name='DeleteDoctor'),
-   path('EditDoctor/<int:lid>/', EditDoctor.as_view(), name='EditDoctor'),
+   path('EditDoctor/<int:doctor_id>/', EditDoctor.as_view(), name='EditDoctor'),
    path("EditDrProfile", EditDrProfile.as_view(), name="EditDrProfile"),
+   path("ViewRating", ViewRating.as_view(), name="ViewRating"),
  
 #/////////////////////////// DOCTOR /////////////////////////////
 
    path("DoctorHome",DoctorHome.as_view(),name="DoctorHome"),
    path("ManageSchedule",ManageSchedule.as_view(), name="ManageSchedule"),
    path("ViewBooking",ViewBooking.as_view(), name="ViewBooking"),
-   path("Updateprofile",Updateprofile.as_view(), name="Updateprofile"),
+   path("UpdateDrProfile",UpdateDrProfile.as_view(), name="UpdateDrProfile"),
    path("ViewComplaints",ViewComplaints.as_view(), name="ViewComplaints")
    
    

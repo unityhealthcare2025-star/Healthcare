@@ -10,30 +10,30 @@
     <form method="post">
     {% csrf_token %}
          <label>Doctor_Name :</label>
-        <input type="text" name="doctor_name"><br><br>
+        <input type="text" name="UserName" value="{{ val.UserName }}"><br><br>
         <label>DOB :</label>
-        <input type="date" name="DOB" ><br><br>
+        <input type="date" name="DOB" value="{{ dob }}"><br><br>
         <label>Gender :</label>
-    <input type="radio" name="Gender" value="male">
+    <input type="radio" name="Gender" value="male" {% if val.Gender == 'male' %} checked {% endif %}>
     <label>male</label>
 
-    <input type="radio" name="Gender" value="female">
+    <input type="radio" name="Gender" value="female" {% if val.Gender == 'female' %} checked {% endif %}>
     <label>female</label>
    
-    <input type="radio" name="Gender" value="other">
+    <input type="radio" name="Gender" value="other" {% if val.Gender == 'other' %} checked {% endif %}>
     <label>other</label>
     
         <br><br>
         <label>Specialization:</label>
-        <input type="text" name="Specialization"><br><br>
+        <input type="text" name="Specialization" value="{{ val.Specialization }}"><br><br>
         <label>Qualification:</label>
-        <input type="text" name="Qualification"><br><br>
+        <input type="text" name="Qualification" value="{{ val.Qualification }}"><br><br>
         <label>Experience :</label>
-        <input type="text" name="Experience_year" ><br><br>
+        <input type="text" name="Experience_year" value="{{ val.Experience_year }}"><br><br>
         <label>E-mail_id:</label>
-        <input type="text" name="E_mail"><br><br>
+        <input type="text" name="E_mail" value="{{ val.E_mail }}"><br><br>
         <label>Mobile.No:</label>
-        <input type="text" name="Phone" ><br><br>
+        <input type="text" name="Phone" value="{{ val.Phone }}"><br><br>
         <button  type="submit">save</button>
        
      </form>

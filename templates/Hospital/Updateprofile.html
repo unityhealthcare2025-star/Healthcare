@@ -6,6 +6,8 @@
     <title>Document</title>
 </head>
 <body>
+    <form method="post">
+        {% csrf_token %}
     <center>
         <h1>Edit Your Profile</h1>
     </center>
@@ -15,24 +17,24 @@
         </center>
        
         <label>Hospital_Name :</label>
-        <input type="text" value="{{ val.UserName }}" name="hospital_name"><br><br>
+        <input type="text" value="{{ val.UserName }}" name="UserName"><br><br>
         <label>Mobile.No :</label>
-        <input type="text" value="{{ val.Phone }}" name="mobile_no"><br><br>
+        <input type="text" value="{{ val.Phone }}" name="Phone "><br><br>
         <label>Email_id </label>
-        <input type="text" value="{{ val.E_mail}}" name="email_id"><br><br>
+        <input type="text" value="{{ val.E_mail}}" name="E_mail"><br><br>
         <label>Address :</label>
-        <textarea name="address">{{ val.Address }}</textarea><br><br>
+        <textarea name="Address">{{ val.Address }}</textarea><br><br>
         <label>City:</label>
-        <input type="text" value="{{ val.City }}" name="city"><br><br>
+        <input type="text" value="{{ val.City }}" name="City"><br><br>
         <label>State:</label>
-        <input type="text" value="{{ val.State }}" name="state"><br><br>
+        <input type="text" value="{{ val.State }}" name="State"><br><br>
         <label>Pincode:</label>
-        <input type="text" value="{{ val.Pincode }}" name="pincode"><br><br>
+        <input type="text" value="{{ val.Pincode }}" name="Pincode"><br><br>
         <a href="/ChangePassword">
         <input type="button" value="change password"><br><br></a>
         <center>
-        <input type="submit" value="Save"  >       
+        <button type="submit">save</button>       
         </center>
-
+    </form>
 </body>
 </html>

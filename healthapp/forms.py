@@ -11,10 +11,6 @@ class Add_doctorForm(ModelForm):
         model=DoctorTable
         fields=['UserName','DOB','Gender','Specialization','Qualification','Experience_year','E_mail','Phone'] 
 
-class UpdateHospitalForm(ModelForm):
-    class Meta:
-        model=HospitalTable
-        fields=['UserName','Phone','E_mail','Address','City','State','Pincode']
 
 class ResponseForm(ModelForm):
     class Meta:

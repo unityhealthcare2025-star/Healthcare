@@ -5,6 +5,7 @@ from healthapp.models import *
 from healthapp.forms import *
 from django.shortcuts import render, redirect
 from django.views import View
+from django.http import HttpResponse
 from .models import *  # Adjust import based on your project structure
 
 
@@ -31,7 +32,7 @@ class LoginPage(View):
                 
                 return render(request,'Doctor/DoctorHome.html')
         except LoginTable.DoesNotExist:
-            return render(request,'"Administration/Login.html',{'error':'Invalid username or password'})
+            return render(request,'Administration/Login.html',{'error':'Invalid username or password'})
 
 class AdminHome(View):
     def get(self,request):
@@ -89,6 +90,11 @@ class Registration(View):
         return render(request, "Hospital/Reg.html")
     def post(self,request):
         form=RegistrationForm(request.POST,request.FILES)
+        obj = LoginTable.objects.all()
+        username = request.POST['Username']
+        for i in obj:
+           if i.Username == username:
+               return HttpResponse('''<script>alert("user already exist"); window.location="/";</script>''')
         if form.is_valid():
             f=form.save(commit=False)
             f.LOGIN=LoginTable.objects.create(Username=request.POST['Username'],Password=request.POST['Password'],UserType='pending')
@@ -99,6 +105,24 @@ class ChangePassword(View):
     def get(self,request):
         return render(request, "Hospital/ChangePassword.html")
     
+    def post(self,request):
+        print("----------->")
+        currentPassword = request.POST['currentPassword']
+        newPassword = request.POST['newPassword']
+        retypeNewPassword = request.POST['retypeNewPassword']
+
+        obj = LoginTable.objects.get(id=request.session['login_id'])
+        password=obj.Password
+        print("---------password--->", password)
+        if password == currentPassword:
+            if newPassword == retypeNewPassword:
+                obj.Password = newPassword
+                obj.save()
+                return HttpResponse('''<script>alert("your password is changed successfully."); window.location="/UpdateProfile";</script>''')
+        else:    
+            return HttpResponse('''<script>alert("Your old password was entered incorrectly.Please enter it again."); window.location="/UpdateProfile";</script>''')
+
+    
 class AddDoctor(View):
     def get(self,request):
         return render(request, "Hospital/AddDoctor.html")
@@ -107,9 +131,10 @@ class AddDoctor(View):
         form=Add_doctorForm(request.POST,request.FILES)
         if form.is_valid():
             f=form.save(commit=False)
-            f.LOGINID=LoginTable.objects.create(Username=request.POST['UserName'],Password=request.POST['Password'],UserType='Doctor')
+            f.LOGIN=LoginTable.objects.create(Username=request.POST['UserName'],Password=request.POST['Password'],UserType='Doctor')
+            f.HOSPITAL=HospitalTable.objects.get(LOGIN_id=request.session['login_id'])
             f.save()
-            return redirect('ManageDoctor')
+            return HttpResponse('''<script>alert("Your old password was entered incorrectly.Please enter it again."); window.location="/UpdateProfile";</script>''')
         
 
     
@@ -118,21 +143,27 @@ class ComplaintReply(View):
         obj = ComplaintTable.objects.all()
         return render(request, "Hospital/ComplaintReply.html",{'val':obj})
     
+class CompReply(View):
+    def post(self,request, c_id):
+        obj = ComplaintTable.objects.get(id=c_id)
+        print("--------->", obj)
+        reply = request.POST['Reply']
+        print("----------------->", reply)
+        obj.Response=reply
+        obj.save()
+        return HttpResponse('''<script>alert("The Reply was given Successfully"); window.location="/ComplaintReply";</script>''')
+    
+class SearchComplaint(View):
+    def post(self,request):
+        search=request.POST['search']
+        obj = ComplaintTable.objects.filter(Date=search)
+        return render(request, "Hospital/ComplaintReply.html",{'val':obj, 'date': search})
+    
 class ManageDoctor(View):
     def get(self,request):
         obj = DoctorTable.objects.all()
         return render(request, "Hospital/ManageDoctor.html",{'val':obj})
     
-class EnrollDoctor(View):
-    def get(self,request):
-        return render(request, "Hospital/AddDoctor.html")
-    def post(self,request):
-        form= Add_doctorForm(request.POST,request.FILES)
-        if form.is_valid():
-            f=form.save(commit=False)
-            f.LOGIN=LoginTable.objects.create(Username=request.POST['Username'],Password=request.POST['Password'],UserType='Doctor')
-            f.save()
-            return redirect('/')
     
 class Response(View):
     def get(self,request):
@@ -142,6 +173,16 @@ class UpdateProfile(View):
     def get(self,request):
         obj = HospitalTable.objects.get(LOGIN__id=request.session['login_id'])
         return render(request, "Hospital/Updateprofile.html",{'val':obj})
+    def post(self,request):
+        print(request.POST)
+        obj = HospitalTable.objects.get(LOGIN_id=request.session['login_id'])
+        form=RegistrationForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            
+            return redirect('viewProfile')
+        
+    
     
 class viewProfile(View):
     def get(self,request):
@@ -150,21 +191,31 @@ class viewProfile(View):
     
 class DeleteDoctor(View):
     def get(self,request, lid):
-        obj = DoctorTable.objects.get(id=lid)
+        obj = LoginTable.objects.get(id=lid)
         obj.delete()
         return redirect('ManageDoctor')
 
 class EditDoctor(View):
-    def get(self,request,lid):
-        obj = DoctorTable.objects.get(id=lid)
-        return render(request,"Hospital/EditDrProfile.html",{'val':obj})
-
+    def get(self,request,doctor_id):
+        obj = DoctorTable.objects.get(id=doctor_id)
+        return render(request,"Hospital/EditDrProfile.html",{'val':obj, 'dob':str(obj.DOB)})
+    def post(self,request, doctor_id):
+        print(request.POST)
+        obj = DoctorTable.objects.get(id=doctor_id)
+        form=Add_doctorForm(request.POST,request.FILES, instance=obj)
+        if form.is_valid():
+            form.save()
+            return redirect('ManageDoctor')
 
 class EditDrProfile(View):
     def get(self,request):
         obj = DoctorTable.objects.get(LOGIN__id=request.session['login_id'])
         return render(request, "Hospital/EditDrProfile.html",{'val':obj})
 
+class ViewRating(View):
+    def get(self,request):
+        obj = FeedbackTable.objects.filter(DOCTOR__HOSPITAL__LOGIN_id=request.session['login_id'])
+        return render(request,"Hospital/ViewDrRating.html",{'val':obj})
     
 # ////////////////////////DOCTOR//////////////////////////////////
 
@@ -182,10 +233,10 @@ class ViewBooking(View):
         obj = BookingTable.objects.all()
         return render(request, "Doctor/ViewBooking.html",{'val':obj})
     
-class Updateprofile(View):
+class UpdateDrProfile(View):
     def get(self,request):
         obj = DoctorTable.objects.get(LOGIN__id=request.session['login_id'])
-        return render(request, "Doctor/Updateprofile.html", {'val':obj, 'DOB': str(obj.DOB)})
+        return render(request, "Doctor/UpdateDrProfile.html", {'val':obj, 'DOB': str(obj.DOB)})
     
 class ViewComplaints(View):
     def get(self,request):

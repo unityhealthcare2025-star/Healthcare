@@ -57,11 +57,11 @@ class FeedbackTable(models.Model):
 
 class ComplaintTable(models.Model):
     USER = models.ForeignKey(UserTable,on_delete=models.CASCADE,blank=True,null=True)
-    Against = models.CharField(max_length=30, blank=True,null=True)
+    HOSPITAL = models.ForeignKey(HospitalTable,on_delete=models.CASCADE,blank=True,null=True)
     Subject =  models.CharField(max_length=100,blank=True,null=True)
     Description =  models.CharField(max_length=200,blank=True,null=True)
     Response = models.CharField(max_length=100,blank=True,null=True)
-    Status = models.CharField(max_length=20,blank=True,null=True)
+    Date = models.DateField(auto_now_add=True)
 
 class ScheduleTable(models.Model):
     DOCTOR = models.ForeignKey(DoctorTable,on_delete=models.CASCADE,blank=True,null=True)
