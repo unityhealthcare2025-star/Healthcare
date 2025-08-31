@@ -18,23 +18,27 @@
     </style>
 </head>
 <body>
-    <center><h1>Schedule</h1></center>
-    <form>
-        <label>Day Of Week :</label>
-        <input type="text" name="dayOfWeek"><br><br>
-        <label>Start Time :</label>
-        <input type="time" name="startTime"><br><br>
-        <label>End Time :</label>
-        <input type="time" name="endTime"><br><br>
-        <label for="Status">Status :</label>
-        <select id="status" name="status">
-            <option value=""></option>
-            <option value="Active" >Active</option>
-            <option value="Inactive" >Inactive</option>
-            <option value="Holiday" >Holiday</option>
-        </select><br><br>
-    <center><button type="submit">Save</button> </center>
+    <form method="post">
+         {% csrf_token %}
+      <label>Day of week:</label>
+     <select id="days" name="Day_of_week">
+     <option value="sunday">Sunday</option>
+  <option value="monday">Monday</option>
+  <option value="tuesday">Tuesday</option>
+  <option value="wednesday">Wednesday</option>
+  <option value="thursday">Thursday</option>
+  <option value="friday">Friday</option>
+  <option value="saturday">Saturday</option>
+</select><br><br>
+
+      <label>Start Time:</label>
+      <input type="time" name="Start_Time"><br><br>
+      <label>End Time:</label>
+      <input type="time"  name="End_Time"><br><br>
+      <button type="submit">Submit</button>
+
     </form>
+   
     <h2>Current Schedule</h2>
     <table>
         
@@ -42,7 +46,7 @@
              <th>Day</th>
              <th>Start Time</th>
              <th>End Time</th>
-             <th>Status</th>
+            
              <th>Action</th>
         </tr>
         {% for i in val %}
@@ -50,9 +54,12 @@
               <td>{{ i.Day_of_week }}</td>
               <td>{{ i.Start_Time }}</td>
               <td>{{ i.End_Time }}</td>
-              <td>{{ i.Status }}</td>
-              <td><button class="edit-btn">Edit</button>
-            <button class="delete-btn">Delete</button></td>
+             
+              <td>
+         
+             <a href="DeleteSchedule/{{ i.id }}">
+                    delete
+                </a></td>
         </tr>
         {% endfor %}
     </table>

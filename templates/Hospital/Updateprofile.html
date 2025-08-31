@@ -11,15 +11,19 @@
     <center>
         <h1>Edit Your Profile</h1>
     </center>
-    <Img src="">
+    <Img src="{{ val.Image.url }}">
         <center>
-        <p>Change Profile Picture</p>
+        <p><tr>
+          <label>Hospital_Image :</label>
+        <input type="image" name="Image"><br><br>   
+
+        </tr>Change Profile Picture</p>
         </center>
        
         <label>Hospital_Name :</label>
         <input type="text" value="{{ val.UserName }}" name="UserName"><br><br>
         <label>Mobile.No :</label>
-        <input type="text" value="{{ val.Phone }}" name="Phone "><br><br>
+        <input type="text" value="{{ val.Phone }}" name="Phone"><br><br>
         <label>Email_id </label>
         <input type="text" value="{{ val.E_mail}}" name="E_mail"><br><br>
         <label>Address :</label>

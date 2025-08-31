@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            
+            border: 2px solid;
+            padding:8px;
+       
+        }
+        table{
+            border-collapse:collapse ;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>View Profile</h1>
+    <table>
+   
+        <tr>
+           <th>Doctor_Name</th>
+           <td>{{ val.UserName }}</td>
+
+        </tr>
+
+       
+        <tr>
+        <th>DOB</th>
+        <td>{{ DOB }}</td>
+        </tr>
+
+        <tr>
+        <th>Gender</th>
+        <td>{{val.Gender}}</td>
+        </tr>
+
+        <tr>
+        <th>Specialization</th>
+        <td>{{val.Specialization}}</td>
+        </tr>
+
+        <tr>
+        <th>Qualification</th>
+        <td>{{val.Qualification}}</td>
+        </tr>
+
+        <tr>
+        <th>Experience_year</th>
+        <td>{{val.Experience_year}}</td>
+        </tr>
+
+        <tr>
+        <th>E_mail</th>
+        <td>{{val.E_mail}}</td>
+        </tr>
+
+        <tr>
+        <th>Phone</th>
+        <td>{{val.Phone }}</td>
+        </tr>
+        
+        <tr>
+        <th>HOSPITAL</th>
+        <td>{{val.HOSPITAL.UserName }}</td>
+        </tr>
+        
+        <tr>
+        <th>Added_on</th>
+        <td>{{val.Added_on}}</td>
+        </tr>
+        
+ 
+   
+        </table>
+
+<a href="/UpdateDrProfile">
+   <input type="button" value="Edit">
+ </html>

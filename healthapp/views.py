@@ -227,6 +227,16 @@ class ManageSchedule(View):
     def get(self,request):
         obj = ScheduleTable.objects.all()
         return render(request, "Doctor/ManageSchedule.html",{'val':obj})
+    def post(self,request):
+        print(request.POST)
+        obj = DoctorTable.objects.get(LOGIN_id=request.session['login_id'])
+        form=ManageScheduleForm(request.POST)
+        if form.is_valid():
+            f = form.save(commit=False)
+            f.DOCTOR=obj
+            f.save()
+            return redirect('ManageSchedule')
+        
     
 class ViewBooking(View):
     def get(self,request):
@@ -237,9 +247,51 @@ class UpdateDrProfile(View):
     def get(self,request):
         obj = DoctorTable.objects.get(LOGIN__id=request.session['login_id'])
         return render(request, "Doctor/UpdateDrProfile.html", {'val':obj, 'DOB': str(obj.DOB)})
+    def post(self,request):
+        print(request.POST)
+        obj = DoctorTable.objects.get(LOGIN_id=request.session['login_id'])
+        form=UpdatedoctorForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            return redirect('viewDrProfile')
+         
+
+    
+class viewDrProfile(View):
+    def get(self,request):
+        obj = DoctorTable.objects.get(LOGIN__id=request.session['login_id'])
+        return render(request, "Doctor/viewDrProfile.html", {'val':obj, 'DOB': str(obj.DOB)})
     
 class ViewComplaints(View):
     def get(self,request):
         obj = ComplaintTable.objects.all()
         return render(request, "Doctor/ViewComplaints.html",{'val':obj})
+    
+
+class ChangePassword1(View):
+    def get(self,request):
+        return render(request, "Doctor/ChangePassword1.html")
+    
+    def post(self,request):
+        print("----------->")
+        currentPassword = request.POST['currentPassword']
+        newPassword = request.POST['newPassword']
+        retypeNewPassword = request.POST['retypeNewPassword']
+
+        obj = LoginTable.objects.get(id=request.session['login_id'])
+        password=obj.Password
+        print("---------password--->", password)
+        if password == currentPassword:
+            if newPassword == retypeNewPassword:
+                obj.Password = newPassword
+                obj.save()
+                return HttpResponse('''<script>alert("your password is changed successfully."); window.location="/UpdateDrProfile";</script>''')
+        else:    
+            return HttpResponse('''<script>alert("Your old password was entered incorrectly.Please enter it again."); window.location="/UpdateDrProfile";</script>''')
+
+class DeleteSchedule(View):
+    def get(self,request, lid):
+        obj = ScheduleTable.objects.get(id=lid)
+        obj.delete()
+        return redirect('ManageSchedule') 
 

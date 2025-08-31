@@ -41,7 +41,9 @@ urlpatterns = [
    path("ManageSchedule",ManageSchedule.as_view(), name="ManageSchedule"),
    path("ViewBooking",ViewBooking.as_view(), name="ViewBooking"),
    path("UpdateDrProfile",UpdateDrProfile.as_view(), name="UpdateDrProfile"),
-   path("ViewComplaints",ViewComplaints.as_view(), name="ViewComplaints")
-   
+   path("viewDrProfile",viewDrProfile.as_view(), name="viewDrProfile"),
+   path("ViewComplaints",ViewComplaints.as_view(), name="ViewComplaints"),
+   path("ChangePassword1", ChangePassword1.as_view(), name="ChangePassword1"),
+   path('DeleteSchedule/<int:lid>/', DeleteSchedule.as_view(), name='DeleteSchedule')
    
 ]
