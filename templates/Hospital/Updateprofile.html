@@ -6,20 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
     <center>
         <h1>Edit Your Profile</h1>
     </center>
     <Img src="{{ val.Image.url }}">
-        <center>
-        <p><tr>
-          <label>Hospital_Image :</label>
-        <input type="image" name="Image"><br><br>   
-
-        </tr>Change Profile Picture</p>
-        </center>
        
+
+       
+        <label>Change Profile Picture :</label>
+        <input type="file" name="Image"><br><br>
         <label>Hospital_Name :</label>
         <input type="text" value="{{ val.UserName }}" name="UserName"><br><br>
         <label>Mobile.No :</label>

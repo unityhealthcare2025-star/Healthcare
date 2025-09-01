@@ -176,7 +176,7 @@ class UpdateProfile(View):
     def post(self,request):
         print(request.POST)
         obj = HospitalTable.objects.get(LOGIN_id=request.session['login_id'])
-        form=RegistrationForm(request.POST, instance=obj)
+        form=RegistrationForm(request.POST, request.FILES, instance=obj)
         if form.is_valid():
             form.save()
             
