@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td{
+            
+            border: 2px solid;
+            padding:8px;
+       
+        }
+        table{
+            border-collapse:collapse ;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>View Profile</h1>
+    <table>
+        <tr>
+          
+          <img src="{{ val.Image.url }}">
+        
+
+        </tr>
+        <tr>
+           <th>UserName</th>
+           <td>{{ val.UserName }}</td>
+
+        </tr>
+        <tr>
+        <th>E_mail</th>
+        <td>{{val.E_mail}}</td>
+        </tr>
+
+        <tr>
+        <th>Phone</th>
+        <td>{{val.Phone}}</td>
+        </tr>
+
+        <tr>
+        <th>Address</th>
+        <td>{{val.Address}}</td>
+        </tr>
+
+        <tr>
+        <th>City</th>
+        <td>{{val.City}}</td>
+        </tr>
+
+        <tr>
+        <th>State</th>
+        <td>{{val.State}}</td>
+        </tr>
+
+        <tr>
+        <th>Pincode</th>
+        <td>{{val.Pincode}}</td>
+        </tr>
+        
+ 
+   
+        </table>
+
+<a href="/UpdateProfile">
+   <input type="button" value="Edit">
+ </html>

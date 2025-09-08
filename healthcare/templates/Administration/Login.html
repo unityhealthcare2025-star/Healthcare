@@ -1,14 +1,26 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            background-image: url("{% static 'jj.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            align-items: center;
+        }
+
+    </style>
 </head>
 <body>
-    <center>
-    <h3>LOGIN</h3>
-    </center>
+    
     <form method="post">
         {% csrf_token %}
        <label>Username</label>
@@ -22,7 +34,10 @@
        <input type="password" name="Password"><br><br>
        <center>
        <input type="submit" value="Login">
+       <a href="Registration">
+       <input type="button" value="Registration"></a>
        </center>
+
     </form>
     
 

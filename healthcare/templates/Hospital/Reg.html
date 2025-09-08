@@ -1,39 +1,53 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+        <style>
+        body {
+            background-image: url("{% static 'jj.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            
+            height: 100vh;
+            align-items: center;
+        }
+
+    </style>
 </head>
 <body>
-    <center>
+   
+    
+    <form method="post" enctype="multipart/form-data">
         <h2>Registration Form</h2>
-    </center>
-    <center><img src="./IMG_20231201_080019_540.jpg" height="100px" width="100px" style="border-radius: 50%;"></center>
-    <center>
-    <p>Add Your Profile Picture</p>
-    </center>
-    <form>
-        
-
-        <label>Hospital_id :</label>
-        <input type="text"><br><br>
+        {% csrf_token %}
         <label>Hospital_Name :</label>
-        <input type="text"><br><br>
+        <input type="text" name="UserName"><br><br>
+        <label>Registration No :</label>
+        <input type="text" name="Registration_no"><br><br>
+        <label>Hospital_Image :</label>
+        <input type="file" name="Image"><br><br>
         <label>Mobile.No :</label>
-        <input type="text"><br><br>
+        <input type="text" name="Phone"><br><br>
         <label>Email_id:</label>
-        <input type="text"><br><br>
+        <input type="text" name="E_mail"><br><br>
         <label>Address :</label>
-        <textarea></textarea><br><br>
+        <textarea name="Address"></textarea><br><br>
         <label>City:</label>
-        <input type="text"><br><br>
+        <input type="text" name="City"><br><br>
         <label>State:</label>
-        <input type="text"><br><br>
+        <input type="text" name=" State"><br><br>
         <label>Pincode:</label>
-        <input type="text"><br><br>
-        <input type="button" value="Register">
-        <input type="button" value="Reset">
+        <input type="text" name="Pincode"><br><br>
+        <label>UserName:</label>
+        <input type="text" name="Username"><br><br>
+        <label>Password:</label>
+        <input type="text" name="Password"><br><br>
+        <button type="submit">Register</button>
      </form>
 </body>
 </html>

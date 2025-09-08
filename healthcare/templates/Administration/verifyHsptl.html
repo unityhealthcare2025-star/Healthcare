@@ -46,8 +46,15 @@
             <td>{{ i.State }}</td>
             <td>{{ i.Pincode}}</td>
         
-            <td><a href="AcceptHospital/{{ i.LOGIN.id }}">Accept</a>
-            <a href="RejectHospital/{{ i.LOGIN.id }}">Reject</a>
+            <td>
+                {% if i.LOGIN.UserType == "pending" %}
+                    <a href="{% url 'AcceptHospital' i.LOGIN.id %}">Accept</a> |
+                    <a href="{% url 'RejectHospital' i.LOGIN.id %}">Reject</a>
+                {% elif i.LOGIN.UserType == "Hospital" %}
+                    <a href="{% url 'RejectHospital' i.LOGIN.id %}">Reject</a>
+                {% elif i.LOGIN.UserType == "rejected" %}
+                    <a href="{% url 'AcceptHospital' i.LOGIN.id %}">Accept</a>
+                {% endif %}
         </td>
         </tr>
          {% endfor %}

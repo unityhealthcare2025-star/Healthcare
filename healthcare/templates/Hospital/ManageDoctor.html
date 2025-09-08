@@ -30,7 +30,7 @@
             <th>E_mail</th>
             <th>Mobile_No</th>
             <th>Added_On</th>
-            <th><a href="AddDoctor.html">add</a></th>
+            <th><a href="AddDoctor">add</a></th>
         </tr>
         {% for i in val %}
         <tr>
@@ -44,10 +44,12 @@
             <td>{{ i.E_mail }}</td>
             <td>{{ i.Phone }}</td>
             <td>{{ i.Added_on }}</td>
-            <td><input type="button" value="Edit">
-                <input type="button" value="Delete">
-                <input type="button" value="Rating">
+            <td>
+               <a href="/EditDoctor/{{ i.id }}"><input type="button" value ="Edit"></a>
+               <a href="/DeleteDoctor/{{ i.LOGIN.id }}"><input type="button" value ="Delete"></a>
+               
             </td>
+            
         </tr>
         {% endfor %}
     </table>

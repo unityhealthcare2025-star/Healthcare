@@ -15,6 +15,7 @@
             border-collapse:collapse ;
             margin-left: 100px;
         }
+        
     </style>
 </head>
 <body>
@@ -31,7 +32,7 @@
             <th>Payment Status</th>
             <th>Amount</th>
             <th>Created On</th>
-            <th>Status</th>
+            <th></th>
             
         </tr>
          {% for i in val %}
@@ -44,7 +45,7 @@
             <td>{{ i.Payment_status }}</td>
             <td>{{ i.Amount }}</td>
             <td>{{ i.Created_on }}</td>
-            <td>{{ i.Status }}</td>
+            <td><a href="/AddPrescription/{{i.id}}">Add Prescription</a></td>
             
             
         </tr>
