@@ -27,7 +27,7 @@ urlpatterns = [
    path("CompReply/<int:c_id>", CompReply.as_view(), name="CompReply"),
    path("SearchComplaint", SearchComplaint.as_view(), name="SearchComplaint"),
    path("ManageDoctor", ManageDoctor.as_view(), name="ManageDoctor"),
-   path("Response", Response.as_view(), name="Response"),
+   # path("Response", Response.as_view(), name="Response"),
    path("UpdateProfile", UpdateProfile.as_view(), name="UpdateProfile"),
    path("viewProfile", viewProfile.as_view(), name="viewProfile"),
    path('DeleteDoctor/<int:lid>/', DeleteDoctor.as_view(), name='DeleteDoctor'),
@@ -44,6 +44,21 @@ urlpatterns = [
    path("viewDrProfile",viewDrProfile.as_view(), name="viewDrProfile"),
    path("ViewComplaints",ViewComplaints.as_view(), name="ViewComplaints"),
    path("ChangePassword1", ChangePassword1.as_view(), name="ChangePassword1"),
-   path('DeleteSchedule/<int:lid>/', DeleteSchedule.as_view(), name='DeleteSchedule')
-   
+   path('DeleteSchedule/<int:lid>/', DeleteSchedule.as_view(), name='DeleteSchedule'),
+   path("AddPrescription/<int:id>",AddPrescription.as_view(), name="AddPrescription"),
+
+
+
+
+#/////////////////////USER///////////////////////////////////
+
+path('userlogin', loginApiView.as_view(), name="userlogin"),
+path('UserRegApiView',UserRegApiView.as_view(), name="UserRegApiView"),
+path('nearby-hospitals', NearbyHospitalsAPIView.as_view(), name='nearby-hospitals'),
+path('usersendComplaints',SendComplaintsApView.as_view(), name="usersendComplaints"),
+path('usersfeedback',FeedbackApiView.as_view(), name="usersfeedback"),
+path('doctors-by-hospital/<int:hospital_id>', DoctorsByHospitalAPIView.as_view()),
+
 ]
+
+

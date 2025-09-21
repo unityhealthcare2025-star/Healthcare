@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-k6o23t*dllxf=f^1(nzjg9tse%0op#w3^j@j)8y^x-5bigtd!a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'healthapp',
+    'rest_framework'
 
 ]
 

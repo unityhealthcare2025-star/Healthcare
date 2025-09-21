@@ -9,7 +9,7 @@ class LoginTable(models.Model):
  
 class HospitalTable(models.Model):
     UserName = models.CharField(max_length=30, blank=True, null=True)
-    Registration_no = models.CharField(max_length=30, blank=True, null=True)
+    # Registration_no = models.CharField(max_length=30, blank=True, null=True)
     Image = models.FileField(null=True,blank=True)
     E_mail = models.CharField(max_length=30, blank=True, null=True)
     Phone = models.BigIntegerField(blank=True, null=True)
@@ -17,6 +17,8 @@ class HospitalTable(models.Model):
     City = models.CharField(max_length=30, blank=True, null=True)
     State = models.CharField(max_length=30, blank=True, null=True)
     Pincode = models.IntegerField(blank=True, null=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     LOGIN = models.ForeignKey(LoginTable,on_delete=models.CASCADE,null=True,blank=True)
 
 class UserTable(models.Model):
@@ -30,7 +32,7 @@ class UserTable(models.Model):
     State = models.CharField(max_length=30,blank=True,null=True)
     Pincode = models.IntegerField(blank=True,null=True)
     LOGIN =models.ForeignKey(LoginTable,on_delete=models.CASCADE,null=True,blank=True)
-    Created_at = models.DateTimeField(blank=True,null=True)
+    Created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
 
 
 class DoctorTable(models.Model):
@@ -88,7 +90,7 @@ class Prescription(models.Model):
     Diagnosis = models.CharField(max_length=100,blank=True,null=True)
     Advice = models.CharField(max_length=100,blank=True,null=True)
     Next_visit_date = models.DateField(blank=True,null=True)
-    Created_on = models.DateTimeField(blank=True,null=True)
+    Created_on = models.DateTimeField(auto_now_add=True)
 
     
     

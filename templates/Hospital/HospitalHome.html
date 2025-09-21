@@ -4,18 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+     <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #859fb9;
+            color: white;
+            padding-top: 30px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar a .icon {
+            margin-right: 10px;
+        }
+
+        .logout {
+            margin-top: 40px;
+            padding: 15px 20px;
+        }
+
+        .logout form {
+            margin: 0;
+        }
+
+        .logout input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .logout input[type="submit"]:hover {
+            background-color: #c0392b;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: #ecf0f1;
+        }
+
+    </style>
 </head>
 <body>
-    <a href="/ManageDoctor">Manage Doctor</a><br>
-    <a href="/AddDoctor">Add doctor</a><br>
-    <a href="/viewProfile">viewProfile</a><br>
-    <a href="/ViewRating">viewDrRating</a><br>
+
+  <div class="sidebar">
+    <a href="/ManageDoctor"><span class="icon">👤</span>Manage Doctor</a><br>
+    <a href="/AddDoctor"><span class="icon">👤</span>Add doctor</a><br>
+    <a href="/viewProfile"><span class="icon">👤</span>viewProfile</a><br>
+    <a href="/ViewRating"><span class="icon">👤</span>viewDrRating</a><br>
+   <a href="/ComplaintReply"><span class="icon">🏥</span>View Complaints and Send Reply</a><br>
+  
    
-    <a href="/ComplaintReply">View Complaints and Send Reply</a><br>
-   
-    <center>
         <a href="">
        <input type="button" value="Logout"></a>
-       </center>
+      </div>
+    <div class="main-content">
+        <h1>Welcome to the Admin Dashboard</h1>
+        <p>Select a function from the sidebar.</p>
+    </div>
+     
 </body>
 </html>

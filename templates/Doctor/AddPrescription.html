@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Add Prescription</h1>
+    <form method="post">
+
+         {% csrf_token %}
+        <label>Patient name</label>
+        <input type="text" value="{{c.USER.UserName}}">
+        <input type="hidden" name="USER" value="{{c.USER.id}}"><br><br>
+        <label>Date issued</label>
+        <input type="date" name="Date"><br><br>
+        <label>Diagnosis</label>
+        <input type="text" name="Diagnosis"><br><br>
+         <label>Advice</label>
+        <input type="text" name="Advice"><br><br>
+         <label>Next visit Date</label>
+        <input type="date" name="Next_visit_date"><br><br>
+         <!-- <label>Created On</label>
+        <input type="date" name="Created_on"> -->
+        
+        <button type="submit">submit</button>
+    </form>
+</body>
+</html>
