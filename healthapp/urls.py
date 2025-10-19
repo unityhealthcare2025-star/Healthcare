@@ -55,9 +55,11 @@ urlpatterns = [
 path('userlogin', loginApiView.as_view(), name="userlogin"),
 path('UserRegApiView',UserRegApiView.as_view(), name="UserRegApiView"),
 path('nearby-hospitals', NearbyHospitalsAPIView.as_view(), name='nearby-hospitals'),
-path('usersendComplaints',SendComplaintsApView.as_view(), name="usersendComplaints"),
+path('usersendComplaints/<int:id>',SendComplaintsApView.as_view(), name="usersendComplaints"),
 path('usersfeedback',FeedbackApiView.as_view(), name="usersfeedback"),
 path('doctors-by-hospital/<int:hospital_id>', DoctorsByHospitalAPIView.as_view()),
+path('doctorbooking/<int:id>', BookAppointmentAPIView.as_view()),
+path('availability/<int:doctor_id>', DoctorAvailabilityView.as_view(), name='doctor-availability'),
 
 ]
 

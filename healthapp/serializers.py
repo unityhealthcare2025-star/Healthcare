@@ -14,7 +14,7 @@ class DoctorFeedbackSerializer(serializers.ModelSerializer):
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model=ComplaintTable
-        fields=['Subject','Description']
+        fields=['Subject','Description','HOSPITAL','Response']
 
 class ViewHospitalSerializeclass(serializers.ModelSerializer):
      class Meta:
@@ -26,10 +26,11 @@ class ViewDoctorSerializeclass(serializers.ModelSerializer):
         model=DoctorTable
         fields=['HOSPITAL']
 
-class BookingSerializeclass(serializers.ModelSerializer):
+class BookingSerializer(serializers.ModelSerializer):
      class Meta:
         model=BookingTable
-        fields=['DOCTOR','Booking_date','Booking_time']
+        fields=['DOCTOR','Booking_date','Booking_time','Status','Payment_status','Payment_mode',
+        'Amount']
 
 class EditProfileSerializer(serializers.ModelSerializer):
      class Meta:

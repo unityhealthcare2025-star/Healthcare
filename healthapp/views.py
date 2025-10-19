@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 
-from healthapp.serializers import ComplaintSerializer, DoctorFeedbackSerializer, LoginSerializer, RegisterSerializer
+from healthapp.serializers import BookingSerializer, ComplaintSerializer, DoctorFeedbackSerializer, LoginSerializer, RegisterSerializer, ViewHospitalSerializeclass
 from .models import *  # Adjust import based on your project structure
 
 
@@ -412,6 +412,7 @@ class DoctorsByHospitalAPIView(APIView):
             data = []
             for doc in doctors:
                 data.append({
+                    'id':doc.id,
                     'name': doc.UserName,
                     'email': doc.E_mail,
                     'phone': doc.Phone,
@@ -426,13 +427,27 @@ class DoctorsByHospitalAPIView(APIView):
         
 class SendComplaintsApView(APIView):
     def get(self, request, id):
-        complaint = complaint.objects.filter(user__id=id)
-        serializer = ComplaintSerializer(complaint, many=True)
-        return Response(serializer.data)
+        comp = ComplaintTable.objects.filter(USER__LOGIN_id=id)
+        hospital = HospitalTable.objects.all()
+        h_data = []
+        for hos in hospital:
+                h_data.append({
+                    'name': hos.UserName,
+                    'id': hos.id,
+                
+                })
+        serializer = ComplaintSerializer(comp, many=True)
+        return Response({
+            'complaints': serializer.data,
+            'hos': h_data
+        })    
+
     def post(self,request,id):
+        print(request.data)
         serializer = ComplaintSerializer(data=request.data)
+        user_obj = UserTable.objects.get(LOGIN_id=id)
         if serializer.is_valid():
-            serializer.save(user_id=id)
+            serializer.save(USER=user_obj)
             return Response({'message': 'Complaint submit successfully'},status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
@@ -444,3 +459,100 @@ class FeedbackApiView(APIView):
             return Response({'message': 'Feedback sent successfully'},status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
+class BookAppointmentAPIView(APIView):
+    def post(self, request, id):
+        try:
+            user = UserTable.objects.get(LOGIN_id=id)
+        except UserTable.DoesNotExist:
+            return Response({'error': 'User not found'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data.copy()
+        serializer = BookingSerializer(data=data)
+
+        if serializer.is_valid():
+            booking = serializer.save(USER=user)
+            return Response({'message': 'Appointment booked successfully', 'booking_id': booking.id}, status=HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from datetime import datetime, timedelta
+from django.utils.dateparse import parse_time
+
+class DoctorAvailabilityView(APIView):
+    def get(self, request, doctor_id):
+        try:
+            doctor = DoctorTable.objects.get(id=doctor_id)
+        except DoctorTable.DoesNotExist:
+            return Response({"error": "Doctor not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # For example: fetch availability for next 7 days
+        today = datetime.today().date()
+        next_seven_days = [today + timedelta(days=i) for i in range(7)]
+
+        # Map of day names to dates in next week (Monday, Tuesday, etc)
+        day_name_to_dates = {}
+        for date in next_seven_days:
+            day_name = date.strftime("%A")  # e.g. "Monday"
+            if day_name not in day_name_to_dates:
+                day_name_to_dates[day_name] = []
+            day_name_to_dates[day_name].append(date.strftime("%Y-%m-%d"))
+
+        # Query DoctorAvailability for this doctor
+        availabilities = ScheduleTable.objects.filter(DOCTOR=doctor)
+
+        # Build response: dates and available time slots per date
+        available_dates = []
+        slots_per_date = {}
+
+        for availability in availabilities:
+            day = availability.Day_of_week
+            start_time = availability.Start_Time
+            end_time = availability.End_Time
+
+            # For each date matching this day, create time slots
+            dates_for_day = day_name_to_dates.get(day, [])
+
+            for date_str in dates_for_day:
+                available_dates.append(date_str)
+                # Build time slots between start_time and end_time (e.g. 30 min slots)
+                slots = []
+
+                # parse times
+                st = parse_time(str(start_time))
+                et = parse_time(str(end_time))
+
+                # time slot duration in minutes
+                slot_duration = 30
+
+                current_time = datetime.combine(datetime.strptime(date_str, "%Y-%m-%d"), st)
+                end_datetime = datetime.combine(datetime.strptime(date_str, "%Y-%m-%d"), et)
+
+                while current_time + timedelta(minutes=slot_duration) <= end_datetime:
+                    slot_str = current_time.strftime("%I:%M %p")  # e.g. "10:00 AM"
+                    slots.append(slot_str)
+                    current_time += timedelta(minutes=slot_duration)
+
+                # Add slots to slots_per_date
+                if date_str in slots_per_date:
+                    slots_per_date[date_str].extend(slots)
+                else:
+                    slots_per_date[date_str] = slots
+
+        # Remove duplicates in available_dates
+        available_dates = list(set(available_dates))
+        available_dates.sort()
+
+        # Optionally remove duplicate time slots in each date
+        for date_key in slots_per_date:
+            slots_per_date[date_key] = sorted(list(set(slots_per_date[date_key])))
+
+        data = {
+            "doctor": doctor.UserName,
+            "dates": available_dates,
+            "slots": slots_per_date
+        }
+        print('---------->', data)
+        return Response(data, status=status.HTTP_200_OK)
