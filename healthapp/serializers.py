@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from healthapp.models import BookingTable, ComplaintTable, DoctorTable, FeedbackTable, HospitalTable, LoginTable, UserTable
+from healthapp.models import *
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model=UserTable
@@ -42,3 +42,38 @@ class LoginSerializer(serializers.ModelSerializer):
         model=LoginTable
         fields=['Username','Password','UserType']
          
+
+class SchedulSerailizer(serializers.ModelSerializer):
+    class Meta:
+        model=ScheduleTable
+        fields='__all__'
+
+class BookDoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingTable
+        fields = ['SCHEDULEID', 'Booking_date']
+
+class BookingHistorySerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='USER.UserName')
+    doctor_name = serializers.CharField(source='SCHEDULEID.DOCTOR.UserName')
+    doctor_id = serializers.CharField(source='SCHEDULEID.DOCTOR.id')
+    schedule_day = serializers.CharField(source='SCHEDULEID.Day_of_week')
+    Start_Time = serializers.TimeField(source='SCHEDULEID.Start_Time')
+    End_Time = serializers.TimeField(source='SCHEDULEID.End_Time')
+    
+
+    bookingid = serializers.IntegerField(source='id')
+    class Meta:
+        model = BookingTable
+        fields = ['id','Status','Start_Time','End_Time','Created_on','user_name', 'doctor_name', 'schedule_day', 'Booking_date', 'bookingid', 'doctor_id']
+
+        
+class PrescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prescription
+        fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+     class Meta:
+        model =  UserTable
+        fields = '__all__'

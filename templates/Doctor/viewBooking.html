@@ -3,55 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>View Booking Details</title>
     <style>
-        th,td{
-            
+        th, td {
             border: 2px solid;
-            padding:8px;
-       
+            padding: 8px;
+            text-align: center;
         }
-        table{
-            border-collapse:collapse ;
-            margin-left: 100px;
+        table {
+            border-collapse: collapse;
+            margin: 40px auto;
+            width: 90%;
         }
-        
+        h1 {
+            text-align: center;
+        }
+        .btn {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-reject {
+            background-color: #f44336;
+            color: white;
+        }
+        a.btn-prescription {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        a.btn-prescription:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <center>
-        <h1>View Booking Details</h1>
-    </center>
+
+    <h1>View Booking Details</h1>
+
     <table>
         <tr>
             <th>No</th>
-            <th>User_name</th>
+            <th>User Name</th>
             <th>Doctor</th>
             <th>Booking Date</th>
-            <th>Booking Time</th>
-            <th>Payment Status</th>
-            <th>Amount</th>
+            <!-- <th>Person</th> -->
+            <th>Status</th>
             <th>Created On</th>
-            <th></th>
-            
+            <th>Action</th>
         </tr>
-         {% for i in val %}
+
+        {% for i in val %}
         <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ i.USER.UserName }}</td>
-            <td>{{ i.DOCTOR.UserName }}</td>
-            <td>{{ i.Booking_date }}</td>
-            <td>{{ i.Booking_time }}</td>
-            <td>{{ i.Payment_status }}</td>
-            <td>{{ i.Amount }}</td>
-            <td>{{ i.Created_on }}</td>
-            <td><a href="/AddPrescription/{{i.id}}">Add Prescription</a></td>
-            
-            
+             <td>{{ forloop.counter }}</td>
+                <td>{{ i.USER.UserName }}</td>
+                <td>{{ i.SCHEDULEID.DOCTOR.UserName }}</td>
+                <td>{{ i.SCHEDULEID.Day_of_week }}</td>
+                <!-- <td>{{ i.count }}</td>  replaced Booking_time with count -->
+                <td>{{ i.Status }}</td>
+                <td>{{ i.Created_on }}</td>
+            <td> 
+                {% if i.Status == "Pending" %}
+                    <a href="/accept_booking/{{ i.id }}" class="btn btn-accept">Accept</a>
+                    <a href="/reject_booking/{{ i.id }}" class="btn btn-reject">Reject</a>
+                {% elif i.Status == "Accepted" %}
+                    <a href="/AddPrescription/{{ i.id }}" class="btn-prescription">Add Prescription</a>
+                {% elif i.Status == "Rejected" %}
+                    <span style="color:red;">Rejected</span>
+                {% endif %}
+            </td>
         </tr>
-         {% endfor %}
+        {% endfor %}
     </table>
-   
-    </form>
+
 </body>
 </html>

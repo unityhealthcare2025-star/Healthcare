@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path
 
 from healthapp.views import *
+from healthapp import views
 
 urlpatterns = [
 # //////////////////////////// ADMIN /////////////////////////////
@@ -60,6 +61,14 @@ path('usersfeedback',FeedbackApiView.as_view(), name="usersfeedback"),
 path('doctors-by-hospital/<int:hospital_id>', DoctorsByHospitalAPIView.as_view()),
 path('doctorbooking/<int:id>', BookAppointmentAPIView.as_view()),
 path('availability/<int:doctor_id>', DoctorAvailabilityView.as_view(), name='doctor-availability'),
+path('bookdoctor/<int:lid>',BookDoctor.as_view(), name="bookdoctor"),
+path('BookingHistory/<int:lid>',BookingHistory.as_view(), name="BookingHistory"),
+path('ViewPrescription/<int:id>',ViewPrescriptionAPI.as_view(),name="ViewPrescription"),
+path('ProfileView',ProfileView.as_view(), name="ProfileView"),
+path('Feedback',FeedbackApi.as_view(), name="Feedback"),
+path('ChangePassword',ChangePasswordApi.as_view(), name="ChangePassword"),
+path('accept_booking/<int:id>/', views.accept_booking, name='accept_booking'),
+path('reject_booking/<int:id>/', views.reject_booking, name='reject_booking'),
 
 ]
 

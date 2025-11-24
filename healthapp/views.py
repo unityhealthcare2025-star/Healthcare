@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 
-from healthapp.serializers import BookingSerializer, ComplaintSerializer, DoctorFeedbackSerializer, LoginSerializer, RegisterSerializer, ViewHospitalSerializeclass
+from healthapp.serializers import *
 from .models import *  # Adjust import based on your project structure
 
 
@@ -137,7 +137,7 @@ class AddDoctor(View):
             f.LOGIN=LoginTable.objects.create(Username=request.POST['UserName'],Password=request.POST['Password'],UserType='Doctor')
             f.HOSPITAL=HospitalTable.objects.get(LOGIN_id=request.session['login_id'])
             f.save()
-            return HttpResponse('''<script>alert("Your old password was entered incorrectly.Please enter it again."); window.location="/UpdateProfile";</script>''')
+            return HttpResponse('''<script>alert("Added Successfully"); window.location="/ManageDoctor";</script>''')
         
 
     
@@ -245,6 +245,18 @@ class ViewBooking(View):
     def get(self,request):
         obj = BookingTable.objects.all()
         return render(request, "Doctor/ViewBooking.html",{'val':obj})
+    
+def accept_booking(request, id):
+    booking = BookingTable.objects.get(id=id)
+    booking.Status = "Accepted"
+    booking.save()
+    return redirect('/ViewBooking')  # your booking list page
+
+def reject_booking(request, id):
+    booking = BookingTable.objects.get(id=id)
+    booking.Status = "Rejected"
+    booking.save()
+    return redirect('/ViewBooking')
     
 class UpdateDrProfile(View):
     def get(self,request):
@@ -483,76 +495,99 @@ from django.utils.dateparse import parse_time
 
 class DoctorAvailabilityView(APIView):
     def get(self, request, doctor_id):
+        c = ScheduleTable.objects.filter(DOCTOR__id = doctor_id)
+        serializer = SchedulSerailizer(c,many=True)
+        print("--------------->", serializer.data)
+        return Response(serializer.data,status=HTTP_200_OK)
+    
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from .models import BookingTable, ScheduleTable, UserTable
+from datetime import datetime, timedelta
+
+class BookDoctor(APIView):
+    def post(self, request, lid):
+        print("Request data:", request.data)
+        user = UserTable.objects.get(LOGIN__id = lid)
+        c = BookDoctorSerializer(data = request.data)
+        
+        if c.is_valid():
+            c.save(USER=user,Status="Pending")
+            return Response(c.data, status=HTTP_200_OK)
+        
+class BookingHistory(APIView):
+    def get(self,request,lid):
+        c = BookingTable.objects.filter(USER__LOGIN__id = lid)
+        serializer = BookingHistorySerializer(c, many=True)
+        print("----------------", serializer.data)
+        return Response(serializer.data, status = HTTP_200_OK)
+
+class ViewPrescriptionAPI(APIView):
+    def get(self,request,id):
+        c = Prescription.objects.filter(BOOKING = id)
+        serializer = PrescriptionSerializer(c, many=True)
+        print(serializer.data)
+        return Response(serializer.data, status = HTTP_200_OK)
+    
+class ProfileView(APIView):
+    def get(self,request,lid):
+        c = UserTable.objects.filter(LOGIN_id =lid)
+        serializer = ProfileSerializer(c)
+        return Response(serializer.data, status = HTTP_200_OK)
+    def put(self,request,lid):
+        user = UserTable.objects.get(LOGIN_id = lid)
+        serializer = ProfileSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_200_OK)
+        return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
+
+class FeedbackApi(APIView):
+    def post(self, request, lid):
+        print(request.data)
         try:
-            doctor = DoctorTable.objects.get(id=doctor_id)
-        except DoctorTable.DoesNotExist:
-            return Response({"error": "Doctor not found"}, status=status.HTTP_404_NOT_FOUND)
+            c = UserTable.objects.get(LOGIN_id=lid)
+        except UserTable.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # For example: fetch availability for next 7 days
-        today = datetime.today().date()
-        next_seven_days = [today + timedelta(days=i) for i in range(7)]
+        d = DoctorFeedbackSerializer(data=request.data)
 
-        # Map of day names to dates in next week (Monday, Tuesday, etc)
-        day_name_to_dates = {}
-        for date in next_seven_days:
-            day_name = date.strftime("%A")  # e.g. "Monday"
-            if day_name not in day_name_to_dates:
-                day_name_to_dates[day_name] = []
-            day_name_to_dates[day_name].append(date.strftime("%Y-%m-%d"))
+        if d.is_valid():
+            d.save(USER=c)
+            return Response(d.data, status=status.HTTP_200_OK)
+        else:
+            return Response(d.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Query DoctorAvailability for this doctor
-        availabilities = ScheduleTable.objects.filter(DOCTOR=doctor)
+class ChangePasswordApi(APIView):
+    def post(self,request,lid):
+        try:
+            # Get user login record
+            login_user = LoginTable.objects.get(id=lid)
+        except LoginTable.DoesNotExist: 
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
 
-        # Build response: dates and available time slots per date
-        available_dates = []
-        slots_per_date = {}
+        if not all([old_password, new_password, confirm_password]):
+            return Response({'error': 'All fields are required'}, status=HTTP_400_BAD_REQUEST)
+        
+        if login_user.Password != old_password:
+            return Response({'error': 'Old password is incorrect'}, status=HTTP_400_BAD_REQUEST)
+        
+        if new_password != confirm_password:
+            return Response({'error': 'New password and confirmation do not match'}, status=HTTP_400_BAD_REQUEST)
+        
+        login_user.Password = new_password
+        login_user.save()
 
-        for availability in availabilities:
-            day = availability.Day_of_week
-            start_time = availability.Start_Time
-            end_time = availability.End_Time
+        return Response({'message': 'Password changed successfully'}, status=HTTP_200_OK)
+            
 
-            # For each date matching this day, create time slots
-            dates_for_day = day_name_to_dates.get(day, [])
 
-            for date_str in dates_for_day:
-                available_dates.append(date_str)
-                # Build time slots between start_time and end_time (e.g. 30 min slots)
-                slots = []
+    
 
-                # parse times
-                st = parse_time(str(start_time))
-                et = parse_time(str(end_time))
 
-                # time slot duration in minutes
-                slot_duration = 30
-
-                current_time = datetime.combine(datetime.strptime(date_str, "%Y-%m-%d"), st)
-                end_datetime = datetime.combine(datetime.strptime(date_str, "%Y-%m-%d"), et)
-
-                while current_time + timedelta(minutes=slot_duration) <= end_datetime:
-                    slot_str = current_time.strftime("%I:%M %p")  # e.g. "10:00 AM"
-                    slots.append(slot_str)
-                    current_time += timedelta(minutes=slot_duration)
-
-                # Add slots to slots_per_date
-                if date_str in slots_per_date:
-                    slots_per_date[date_str].extend(slots)
-                else:
-                    slots_per_date[date_str] = slots
-
-        # Remove duplicates in available_dates
-        available_dates = list(set(available_dates))
-        available_dates.sort()
-
-        # Optionally remove duplicate time slots in each date
-        for date_key in slots_per_date:
-            slots_per_date[date_key] = sorted(list(set(slots_per_date[date_key])))
-
-        data = {
-            "doctor": doctor.UserName,
-            "dates": available_dates,
-            "slots": slots_per_date
-        }
-        print('---------->', data)
-        return Response(data, status=status.HTTP_200_OK)
+        
