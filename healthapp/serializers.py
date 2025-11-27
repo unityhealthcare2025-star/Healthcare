@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class DoctorFeedbackSerializer(serializers.ModelSerializer):      
      class Meta:
         model=FeedbackTable
-        fields=['DOCTOR ','Rating','Comment']
+        fields=['DOCTOR','Rating','Comment']
 
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,4 +76,4 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
      class Meta:
         model =  UserTable
-        fields = '__all__'
+        fields = ['UserName','Gender','DOB','E_mail','Phone','Address','City','State','Pincode','Created_at']

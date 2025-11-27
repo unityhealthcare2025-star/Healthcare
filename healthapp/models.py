@@ -53,10 +53,10 @@ class FeedbackTable(models.Model):
     USER = models.ForeignKey(UserTable,on_delete=models.CASCADE,blank=True,null=True)
     DOCTOR = models.ForeignKey(DoctorTable,on_delete=models.CASCADE,blank=True,null=True)
     Rating = models.IntegerField(blank=True,null=True)
-    Specialization = models.CharField(max_length=30,blank=True,null=True)
+    # Specialization = models.CharField(max_length=30,blank=True,null=True)
     Comment =  models.CharField(max_length=100,blank=True,null=True)
-    Date = models.DateTimeField(blank=True,null=True)
-    Status =  models.CharField(max_length=10,blank=True,null=True)
+    Date = models.DateTimeField(auto_now_add=True)
+    # Status =  models.CharField(max_length=10,blank=True,null=True)
 
 class ComplaintTable(models.Model):
     USER = models.ForeignKey(UserTable,on_delete=models.CASCADE,blank=True,null=True)

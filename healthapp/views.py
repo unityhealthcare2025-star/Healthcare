@@ -463,13 +463,13 @@ class SendComplaintsApView(APIView):
             return Response({'message': 'Complaint submit successfully'},status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
-class FeedbackApiView(APIView):
-    def post(self, request, id):
-        serializer = DoctorFeedbackSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save(user_id=id)
-            return Response({'message': 'Feedback sent successfully'},status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+# class FeedbackApiView(APIView):
+#     def post(self, request, id):
+#         serializer = DoctorFeedbackSerializer(data = request.data)
+#         if serializer.is_valid():
+#             serializer.save(user_id=id)
+#             return Response({'message': 'Feedback sent successfully'},status=HTTP_201_CREATED)
+#         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
 class BookAppointmentAPIView(APIView):
     def post(self, request, id):
@@ -532,11 +532,11 @@ class ViewPrescriptionAPI(APIView):
     
 class ProfileView(APIView):
     def get(self,request,lid):
-        c = UserTable.objects.filter(LOGIN_id =lid)
+        c = UserTable.objects.get(LOGIN__id =lid)
         serializer = ProfileSerializer(c)
         return Response(serializer.data, status = HTTP_200_OK)
     def put(self,request,lid):
-        user = UserTable.objects.get(LOGIN_id = lid)
+        user = UserTable.objects.get(LOGIN__id = lid)
         serializer = ProfileSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
