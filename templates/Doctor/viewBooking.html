@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,7 +55,7 @@
             <th>Doctor</th>
             <th>Booking Date</th>
             <!-- <th>Person</th> -->
-            <th>Status</th>
+            <!-- <th>Status</th>
             <th>Created On</th>
             <th>Action</th>
         </tr>
@@ -65,9 +65,9 @@
              <td>{{ forloop.counter }}</td>
                 <td>{{ i.USER.UserName }}</td>
                 <td>{{ i.SCHEDULEID.DOCTOR.UserName }}</td>
-                <td>{{ i.SCHEDULEID.Day_of_week }}</td>
+                <td>{{ i.SCHEDULEID.Day_of_week }}</td> -->
                 <!-- <td>{{ i.count }}</td>  replaced Booking_time with count -->
-                <td>{{ i.Status }}</td>
+                <!-- <td>{{ i.Status }}</td>
                 <td>{{ i.Created_on }}</td>
             <td> 
                 {% if i.Status == "Pending" %}
@@ -84,4 +84,158 @@
     </table>
 
 </body>
+</html> --> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Booking Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f6fa;
+      color: #333;
+      margin: 20px 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4a90e2;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 90%;
+      margin: 0 auto 40px auto;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    th, td {
+      text-align: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #4a90e2;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    tr:hover td {
+      background-color: #f0f4ff;
+      transition: 0.3s;
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-accept {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-accept:hover {
+      background-color: #218838;
+    }
+
+    .btn-reject {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-reject:hover {
+      background-color: #c82333;
+    }
+
+    a.btn-prescription {
+      background-color: #007bff;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    a.btn-prescription:hover {
+      background-color: #0056b3;
+    }
+
+    /* Status styling */
+    span.status-rejected {
+      color: #dc3545;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      table, th, td {
+        font-size: 13px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .btn, a.btn-prescription {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>View Booking Details</h1>
+
+  <table>
+      <tr>
+          <th>No</th>
+          <th>User Name</th>
+          <th>Doctor</th>
+          <th>Booking Date</th>
+          <th>Status</th>
+          <th>Created On</th>
+          <th>Action</th>
+      </tr>
+
+      {% for i in val %}
+      <tr>
+           <td>{{ forloop.counter }}</td>
+           <td>{{ i.USER.UserName }}</td>
+           <td>{{ i.SCHEDULEID.DOCTOR.UserName }}</td>
+           <td>{{ i.SCHEDULEID.Day_of_week }}</td>
+           <td>{{ i.Status }}</td>
+           <td>{{ i.Created_on }}</td>
+           <td> 
+              {% if i.Status == "Pending" %}
+                  <a href="/accept_booking/{{ i.id }}" class="btn btn-accept">Accept</a>
+                  <a href="/reject_booking/{{ i.id }}" class="btn btn-reject">Reject</a>
+              {% elif i.Status == "Accepted" %}
+                  <a href="/AddPrescription/{{ i.id }}" class="btn-prescription">Add Prescription</a>
+              {% elif i.Status == "Rejected" %}
+                  <span class="status-rejected">Rejected</span>
+              {% endif %}
+          </td>
+      </tr>
+      {% endfor %}
+  </table>
+
+</body>
 </html>
+

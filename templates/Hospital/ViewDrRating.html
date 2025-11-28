@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -46,5 +46,92 @@
          {% endfor %}
             
     </table>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctors Rating and Feedback</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    h2 {
+        color: #355E3B; /* hunter green */
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    table {
+        width: 90%;
+        max-width: 1000px;
+        margin: 0 auto 40px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #355E3B; /* hunter green */
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    @media (max-width: 768px) {
+        table, th, td {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h2>View Doctors Rating and Feedback</h2>
+
+<table>
+    <tr>
+        <th>No</th>
+        <th>User name</th>
+        <th>Doctor name</th>
+        <th>Specialization</th>
+        <th>Rating</th>
+        <th>Feedback summary</th>
+        <th>Date</th>
+    </tr>
+    {% for i in val %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.USER.UserName }}</td>
+        <td>{{ i.DOCTOR.UserName }}</td>
+        <td>{{ i.Specialization }}</td>
+        <td>{{ i.Rating }}</td>
+        <td>{{ i.Comment }}</td>
+        <td>{{ i.Date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 </body>
 </html>

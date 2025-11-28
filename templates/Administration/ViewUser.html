@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -61,5 +61,133 @@
         </tr>
         {% endfor %}
     </table>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>View Users</title>
+  <style>
+    /* Reset some default margin */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* Center the heading */
+    h2 {
+      text-align: center;
+      color: #4a4a4a;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    /* Container to center and add some padding */
+    table {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Table header style */
+    th {
+      background-color: #151618;
+      color: #fff;
+      font-weight: 600;
+      text-align: left;
+      padding: 14px 16px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Table body cells style */
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Zebra striping for rows */
+    tbody tr:nth-child(odd) {
+      background-color: #f9fbfd;
+    }
+
+    /* Hover effect on rows */
+    tbody tr:hover {
+      background-color: #d6e6fb;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Style for delete link */
+    a {
+      color: #e94e4e;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: #b12d2d;
+      text-decoration: underline;
+    }
+
+    /* Responsive: On small screens, enable horizontal scroll */
+    @media (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>View Users</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Si no</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>DOB</th>
+        <th>Email</th>
+        <th>Mobile.No</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Pincode</th>
+        <th>Created_at</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in val %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.UserName }}</td>
+        <td>{{ i.Gender }}</td>
+        <td>{{ i.DOB }}</td>
+        <td>{{ i.E_mail }}</td>
+        <td>{{ i.Phone }}</td>
+        <td>{{ i.Address }}</td>
+        <td>{{ i.City }}</td>
+        <td>{{ i.State }}</td>
+        <td>{{ i.Pincode }}</td>
+        <td>{{ i.Created_at }}</td>
+        <td><a href="DeleteUser/{{ i.LOGIN.id }}">delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </body>
 </html>

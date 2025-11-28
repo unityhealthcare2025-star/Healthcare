@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,5 +43,99 @@
          {% endfor %}
 
     </table>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaints</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+        margin: 20px 0;
+    }
+
+    h2 {
+        text-align: center;
+        color: #4a90e2;
+        margin-bottom: 25px;
+        font-size: 26px;
+    }
+
+    table {
+        width: 90%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #4a90e2;
+        color: white;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    tr:hover td {
+        background-color: #f0f4ff;
+        transition: 0.3s;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    td {
+        word-wrap: break-word;
+        max-width: 200px;
+    }
+
+    @media (max-width: 768px) {
+        table, th, td {
+            font-size: 13px;
+        }
+        h2 {
+            font-size: 22px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h2>Complaints</h2>
+
+<table>
+    <tr>
+        <th>No</th>
+        <th>User Name</th>
+        <th>Subject</th>
+        <th>Description</th>
+        <th>Response</th>
+    </tr>
+    {% for i in val %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.USER.UserName }}</td>
+        <td>{{ i.Subject }}</td>
+        <td>{{ i.Description }}</td>
+        <td>{{ i.Response }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 </body>
 </html>

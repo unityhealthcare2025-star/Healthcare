@@ -66,7 +66,7 @@ path('BookingHistory/<int:lid>',BookingHistory.as_view(), name="BookingHistory")
 path('ViewPrescription/<int:id>',ViewPrescriptionAPI.as_view(),name="ViewPrescription"),
 path('ProfileView/<int:lid>',ProfileView.as_view(), name="ProfileView"),
 path('Feedback/<int:lid>',FeedbackApi.as_view(), name="Feedback"),
-path('ChangePassword',ChangePasswordApi.as_view(), name="ChangePassword"),
+path('ChangePassword/<int:lid>',ChangePasswordApi.as_view(), name="ChangePassword"),
 path('accept_booking/<int:id>/', views.accept_booking, name='accept_booking'),
 path('reject_booking/<int:id>/', views.reject_booking, name='reject_booking'),
 

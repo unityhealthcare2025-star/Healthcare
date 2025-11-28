@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,4 +79,150 @@
 
 <a href="/UpdateDrProfile">
    <input type="button" value="Edit">
- </html>
+ </html> -->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>View Profile</title>
+  <style>
+    /* Body styling for better font and background */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9fc;
+      margin: 40px 20px;
+      color: #333;
+    }
+
+    /* Center and style the heading */
+    h1 {
+      text-align: center;
+      color: #4a90e2;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    /* Table container for alignment */
+    table {
+      width: 80%;
+      max-width: 700px;
+      margin: 0 auto 40px auto;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* Style table headers */
+    th {
+      background-color: #4a90e2;
+      color: white;
+      text-align: left;
+      padding: 14px 20px;
+      font-weight: 600;
+      border-bottom: 2px solid #3b78c1;
+      width: 40%;
+    }
+
+    /* Style table data cells */
+    td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e1e7f0;
+      font-size: 1rem;
+    }
+
+    /* Remove border from last row */
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Style the edit button */
+    a input[type="button"] {
+      display: block;
+      margin: 0 auto;
+      padding: 12px 40px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    a input[type="button"]:hover {
+      background-color: #3b78c1;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      table {
+        width: 95%;
+      }
+      th, td {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+      a input[type="button"] {
+        padding: 10px 30px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>View Profile</h1>
+  <table>
+    <tr>
+      <th>Doctor Name</th>
+      <td>{{ val.UserName }}</td>
+    </tr>
+    <tr>
+      <th>DOB</th>
+      <td>{{ DOB }}</td>
+    </tr>
+    <tr>
+      <th>Gender</th>
+      <td>{{ val.Gender }}</td>
+    </tr>
+    <tr>
+      <th>Specialization</th>
+      <td>{{ val.Specialization }}</td>
+    </tr>
+    <tr>
+      <th>Qualification</th>
+      <td>{{ val.Qualification }}</td>
+    </tr>
+    <tr>
+      <th>Experience Year</th>
+      <td>{{ val.Experience_year }}</td>
+    </tr>
+    <tr>
+      <th>Email</th>
+      <td>{{ val.E_mail }}</td>
+    </tr>
+    <tr>
+      <th>Phone</th>
+      <td>{{ val.Phone }}</td>
+    </tr>
+    <tr>
+      <th>Hospital</th>
+      <td>{{ val.HOSPITAL.UserName }}</td>
+    </tr>
+    <tr>
+      <th>Added On</th>
+      <td>{{ val.Added_on }}</td>
+    </tr>
+  </table>
+
+  <a href="/UpdateDrProfile">
+    <input type="button" value="Edit" />
+  </a>
+</body>
+</html>
+
+ 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,6 +53,140 @@
         </tr>
         {% endfor %}
     </table>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Doctors</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+        margin: 20px 0;
+    }
+
+    h1 {
+        text-align: center;
+        color: #355E3B; /* hunter green */
+        margin-bottom: 25px;
+    }
+
+    table {
+        width: 95%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #355E3B; /* hunter green */
+        color: white;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover td {
+        background-color: #e6f0e6; /* light green hover */
+        transition: 0.3s;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    input[type="button"] {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        background-color: #355E3B; /* hunter green */
+        transition: background-color 0.3s;
+    }
+
+    input[type="button"]:hover {
+        background-color: #2a472c; /* darker hunter green */
+    }
+
+    a.add-doctor {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        margin: 0;
+    }
+
+    a.add-doctor:hover {
+        background-color: #218838;
+    }
+
+    @media (max-width: 768px) {
+        table, th, td {
+            font-size: 13px;
+        }
+        h1 {
+            font-size: 22px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>Manage Doctors</h1>
+
+<table>
+    <tr>
+        <th>Doctor_id</th>
+        <th>Doctor_Name</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>Specialization</th>
+        <th>Qualification</th>
+        <th>Experience</th>
+        <th>E_mail</th>
+        <th>Mobile_No</th>
+        <th>Added_On</th>
+        <th><a href="AddDoctor" class="add-doctor">Add</a></th>
+    </tr>
+    {% for i in val %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.UserName }}</td>
+        <td>{{ i.DOB }}</td>
+        <td>{{ i.Gender }}</td>
+        <td>{{ i.Specialization }}</td>
+        <td>{{ i.Qualification  }}</td>
+        <td>{{ i.Experience_year }}</td>
+        <td>{{ i.E_mail }}</td>
+        <td>{{ i.Phone }}</td>
+        <td>{{ i.Added_on }}</td>
+        <td>
+            <a href="/EditDoctor/{{ i.id }}"><input type="button" value="Edit"></a>
+            <a href="/DeleteDoctor/{{ i.LOGIN.id }}"><input type="button" value="Delete"></a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 </body>
 </html>

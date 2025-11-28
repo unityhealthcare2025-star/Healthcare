@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -63,5 +63,179 @@
         </tr>
         {% endfor %}
     </table>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Schedule</title>
+  <style>
+    /* Basic reset and font */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      margin: 40px 20px;
+      color: #333;
+    }
+
+    /* Center and style the form */
+    form {
+      background-color: white;
+      max-width: 450px;
+      margin: 0 auto 40px auto;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #4a4a4a;
+    }
+
+    select, input[type="time"] {
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus, input[type="time"]:focus {
+      border-color: #4a90e2;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3b78c1;
+    }
+
+    /* Heading style */
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #4a90e2;
+      font-weight: 700;
+    }
+
+    /* Table styling */
+    table {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: center;
+      border-bottom: 1px solid #e0e4e8;
+      font-size: 1rem;
+    }
+
+    th {
+      background-color: #4a90e2;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    tr:hover td {
+      background-color: #f0f5fb;
+    }
+
+    /* Last row border removal */
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Style the delete link */
+    a {
+      color: #d9534f;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #b52b27;
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      form, table {
+        width: 95%;
+      }
+
+      th, td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <form method="post">
+    {% csrf_token %}
+    <label for="days">Day of week:</label>
+    <select id="days" name="Day_of_week">
+      <option value="sunday">Sunday</option>
+      <option value="monday">Monday</option>
+      <option value="tuesday">Tuesday</option>
+      <option value="wednesday">Wednesday</option>
+      <option value="thursday">Thursday</option>
+      <option value="friday">Friday</option>
+      <option value="saturday">Saturday</option>
+    </select>
+
+    <label for="start">Start Time:</label>
+    <input type="time" id="start" name="Start_Time" />
+
+    <label for="end">End Time:</label>
+    <input type="time" id="end" name="End_Time" />
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2>Current Schedule</h2>
+  <table>
+    <tr>
+      <th>Day</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Action</th>
+    </tr>
+    {% for i in val %}
+    <tr>
+      <td>{{ i.Day_of_week }}</td>
+      <td>{{ i.Start_Time }}</td>
+      <td>{{ i.End_Time }}</td>
+      <td><a href="DeleteSchedule/{{ i.id }}">delete</a></td>
+    </tr>
+    {% endfor %}
+  </table>
 </body>
 </html>

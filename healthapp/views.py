@@ -540,6 +540,7 @@ class ProfileView(APIView):
         serializer = ProfileSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            print('------------------------', serializer.data)
             return Response(serializer.data, status=HTTP_200_OK)
         return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
 

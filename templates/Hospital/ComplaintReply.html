@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -60,5 +60,145 @@
     </tr>
     {% endfor %}
     </table><br>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Complaint And Send Reply</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    h2 {
+        color: #355E3B; /* hunter green */
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 28px;
+    }
+
+    table {
+        width: 90%;
+        max-width: 1000px;
+        margin: 0 auto 40px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #355E3B; /* hunter green */
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    input[type="date"], textarea {
+        width: 90%;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        margin-bottom: 5px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 6px;
+        background-color: #355E3B; /* hunter green */
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #2a472c;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 50px;
+    }
+
+    form {
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        table, th, td, input[type="date"], textarea {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h2>View Complaint And Send Reply</h2>
+
+<table>
+    <form method="post" action="SearchComplaint">
+        {% csrf_token %}
+    <tr>
+        <td colspan="2">
+            <input type="date" name="search" value="{{ date }}">
+            <input type="submit" value="Search">
+        </td>
+    </tr>
+    </form>
+    <tr>
+        <th>No</th>
+        <th>User Name</th>
+        <th>Subject</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Response</th>
+    </tr>
+    {% for i in val %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.USER.UserName }}</td>
+        <td>{{ i.Subject }}</td>
+        <td>{{ i.Description }}</td>
+        <td>{{ i.Date }}</td>
+        <td>
+            {% if i.Response %}
+            {{ i.Response }}
+
+            
+            {% else %}
+            <form method="post" action="CompReply/{{ i.id }}">
+                {% csrf_token %}
+                <textarea name="Reply"></textarea><br>
+                <input type="submit" value="Reply">
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
 </body>
 </html>
