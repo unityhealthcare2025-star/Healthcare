@@ -588,7 +588,221 @@ class ChangePasswordApi(APIView):
             
 
 
-    
+# import google.generativeai as genai
+# from rest_framework import status
 
+# genai.configure(api_key="AIzaSyDUIK-os6NJ-zut8hSaAuIi49lgzct8ico")
 
+# #-----------------------------------CHATBOT API ----------------------------
+
+# class DiseaseChatbotApi(APIView):
+#     """
+#     AI-powered chatbot for disease prediction and treatment recommendations.
+#     Takes symptoms as input and returns possible conditions + recommendations.
+#     Stores chat history for each user.
+#     """
+
+#     def post(self,request,lid):
+#         print("=== Incoming Request ====")
+#         print("Request data:",request.data)
+#         print("User Login ID:",lid)
+
+#         # Step 1: Fetch User
+
+#         try:
+#             user = UserTable.objects.get(LOGIN_id=lid)
+#             print("User found:",user.UserName)
+#         except UserTable.DoesNotExist:
+#             print("User not found for Login ID:",lid)
+#             return Response(
+#                 {"error": "User not found"},
+#                 status=status.HTTP_404_NOT_FOUND
+#             )
         
+#         # Step 2: Validate input
+
+#         symptoms = request.data.get("symptoms", "").strip()
+#         print ("Symptoms received:", symptoms)
+#         if not symptoms:
+#             print("No symptoms provided")
+#             return Response(
+#                 {"error": "Please provide your symptoms for analysis."},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             ) 
+        
+#         # STEP 3: Construct gemini prompt
+
+#         prompt = f"""
+#         You are a professional medical assistant AI. A patient reports  the following symptoms:
+#         "{symptoms}"
+
+#         Based on general medical knowledge:
+#         1. Predict the most likely possible disease or health condiotions.
+#         2. Provide a brief explanation for each possible disease.
+#         3. Suggest suitable treatment recommendation,including:
+#             - Initial home remedies
+#             - Over-the-counter medicine advice (if safe)
+#             - When the patient should seek medical attention
+#         4.Keep your tone empathetic, clear, and informative.
+
+#         Always end with this disclaimer:
+#         "⚠️ This is an AI-generated prediction.Please consult a licensed medical professional for accurate diagnosis and treatment."
+#         """
+#         print("Constructed Gemini prompt:\n", prompt)
+            
+#             # step 4:call gemini model safely
+#         try:
+#             model = genai.GenerativeModel("gemini-1.5-flash-latest")
+
+#             response = model.generate_content(prompt)
+#             print("Raw Gemini response:",response)
+
+#             ai_response = getattr(response, "text", None)
+#             if not ai_response:
+#                 print("No text in AI response")
+#                 return Response(
+#                     {"error": "Failed to generate AI response. Try again later."},
+#                     status=status.HTTP_502_BAD_GATEWAY
+#                 )
+            
+#             ai_response = ai_response.strip()
+#             print("Cleaned AI Response:",ai_response[:500] + ("..." if len(ai_response) > 500 else ""))
+        
+#         except Exception as e:
+#             print('------------>')
+#             print("Gemini API Error:", str(e))
+#             return Response(
+#                 {"error": f"Gemini API error: {str(e)}"},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+#         # step 5: store chat history
+#         try:
+#             chat = ChatHistory.objects.create(
+#                 user=user,
+#                 symptoms=symptoms,
+#                 ai_response=ai_response
+#             )
+#             print("chat history saved With ID:", chat.id)
+#         except Exception as e:
+#             print("Faile to save chat history:", str(e))
+
+#         # step 6: Return structured response
+#         data = {
+#             "user": user.UserName,
+#             "input_symptoms": symptoms,
+#             "prediction_result": ai_response
+
+#         }  
+
+#         print("Returning API response:",data)
+#         return Response(data, status=status.HTTP_200_OK)  
+
+
+    
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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"  
+)
+
+class DiseaseChatbotApi(APIView):
+    """
+    AI-powered chatbot for disease prediction and treatment recommendations.
+    Takes symptoms as input and returns possible conditions + recommendations.
+    Stores chat history for each user.
+    """
+
+    def post(self, request, lid):
+        print("=== Incoming Request ====")
+        print("Request data:", request.data)
+        print("User Login ID:", lid)
+
+        # Step 1: Fetch User
+        try:
+            user = UserTable.objects.get(LOGIN_id=lid)
+            print("User found:", user.UserName)
+        except UserTable.DoesNotExist:
+            print("User not found")
+            return Response(
+                {"error": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Step 2: Validate symptoms input
+        symptoms = request.data.get("symptoms", "").strip()
+        print("Symptoms received:", symptoms)
+
+        if not symptoms:
+            return Response(
+                {"error": "Please provide your symptoms."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Step 3: Build clean prompt
+        prompt = f"""
+You are a professional medical assistant AI. A patient reports these symptoms:
+"{symptoms}"
+
+Based on general medical knowledge:
+1. Predict likely possible diseases or conditions.
+2. Explain briefly why each disease is possible.
+3. Recommend:
+   - Safe home remedies
+   - Over-the-counter medicines (if safe)
+   - When they must seek medical attention
+4. Respond in an empathetic, clear, and helpful tone.
+
+End with:
+"⚠️ This is an AI-generated prediction. Consult a licensed medical professional for an accurate diagnosis."
+"""
+        print("Constructed Prompt:", prompt)
+
+        # Step 4: Call OpenRouter safely
+        try:
+            response = client.chat.completions.create(
+                model="openai/gpt-4.1-mini",
+                messages=[
+                    {"role": "system", "content": "You are a medical assistant AI."},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            # Correct extraction
+            ai_response = response.choices[0].message.content.strip()
+
+            # REMOVE ALL * SYMBOLS
+            ai_response = ai_response.replace("*", "")
+
+            print("Cleaned AI Response:", ai_response)
+
+        except Exception as e:
+            print("OpenRouter API Error:", str(e))
+            return Response(
+                {"error": f"AI service error: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        # Step 5: Save chat history
+        try:
+            chat = ChatHistory.objects.create(
+                user=user,
+                symptoms=symptoms,
+                ai_response=ai_response
+            )
+            print("Chat history saved! ID:", chat.id)
+        except Exception as e:
+            print("Chat save error:", str(e))
+
+        # Step 6: Return final response
+        data = {
+            "user": user.UserName,
+            "input_symptoms": symptoms,
+            "prediction_result": ai_response
+        }
+
+        print("Returning API Response:", data)
+        return Response(data, status=status.HTTP_200_OK)

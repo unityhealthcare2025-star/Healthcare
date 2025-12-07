@@ -69,7 +69,7 @@ path('Feedback/<int:lid>',FeedbackApi.as_view(), name="Feedback"),
 path('ChangePassword/<int:lid>',ChangePasswordApi.as_view(), name="ChangePassword"),
 path('accept_booking/<int:id>/', views.accept_booking, name='accept_booking'),
 path('reject_booking/<int:id>/', views.reject_booking, name='reject_booking'),
-
+path('chatbot/<int:lid>/',DiseaseChatbotApi.as_view(),name='disease_chatbot'),
 ]
 
 

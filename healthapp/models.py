@@ -93,7 +93,11 @@ class Prescription(models.Model):
     
     
     
-    
+class ChatHistory(models.Model):
+    user = models.ForeignKey(UserTable, on_delete=models.CASCADE)
+    symptoms = models.TextField()
+    ai_response = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 
