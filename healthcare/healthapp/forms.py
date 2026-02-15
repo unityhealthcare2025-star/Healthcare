@@ -5,7 +5,7 @@ from healthapp.models import *
 class RegistrationForm(ModelForm):
     class Meta:
         model=HospitalTable
-        fields=['UserName','Image','Registration_no','Phone','E_mail','Address','City','State','Pincode']
+        fields=['UserName','Image','Phone','E_mail','Address','City','State','Pincode']
 class Add_doctorForm(ModelForm):
     class Meta:
         model=DoctorTable

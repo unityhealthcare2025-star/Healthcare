@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="'stylesheet" href="../style.css"/>
 </head>
 <body>
         <center>
@@ -44,5 +45,157 @@
         <button type="submit">Enroll Doctor</button>
         <button type="reset">Reset</button>
      </form>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enroll Doctor</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        color: #355E3B; /* hunter green */
+        text-align: center;
+        margin: 30px 0;
+        font-size: 32px;
+    }
+
+    form {
+        width: 90%;
+        max-width: 600px;
+        background-color: #fff;
+        margin: 0 auto 50px auto;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    input[type="radio"] {
+        margin-right: 6px;
+    }
+
+    button {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+        transition: background-color 0.3s;
+    }
+
+    button[type="submit"] {
+        background-color: #355E3B; /* hunter green */
+        color: white;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #2a472c;
+    }
+
+    button[type="reset"] {
+        background-color: #f44336;
+        color: white;
+    }
+
+    button[type="reset"]:hover {
+        background-color: #d32f2f;
+    }
+
+    /* Radio group spacing */
+    .radio-group {
+        margin-bottom: 15px;
+    }
+
+    .radio-group label {
+        display: inline-block;
+        margin-right: 12px;
+        font-weight: normal;
+    }
+
+    @media (max-width: 600px) {
+        form {
+            width: 95%;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>Enroll Doctor</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Doctor Name:</label>
+    <input type="text" name="doctor_name">
+
+    <label>DOB:</label>
+    <input type="date" name="DOB">
+
+    <label>Gender:</label>
+    <div class="radio-group">
+        <input type="radio" name="Gender" value="male"><label>Male</label>
+        <input type="radio" name="Gender" value="female"><label>Female</label>
+        <input type="radio" name="Gender" value="other"><label>Other</label>
+    </div>
+
+    <label>Specialization:</label>
+    <input type="text" name="Specialization">
+
+    <label>Qualification:</label>
+    <input type="text" name="Qualification">
+
+    <label>Experience:</label>
+    <input type="text" name="Experience_year">
+
+    <label>E-mail:</label>
+    <input type="text" name="E_mail">
+
+    <label>Mobile No:</label>
+    <input type="text" name="Phone">
+
+    <label>UserName:</label>
+    <input type="text" name="UserName">
+
+    <label>Password:</label>
+    <input type="text" name="Password">
+
+    <button type="submit">Enroll Doctor</button>
+    <button type="reset">Reset</button>
+</form>
+
 </body>
 </html>

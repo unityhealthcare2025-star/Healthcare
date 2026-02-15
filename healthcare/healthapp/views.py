@@ -1,3 +1,4 @@
+from math import atan2, cos, radians, sin, sqrt
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -6,6 +7,8 @@ from healthapp.forms import *
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
+
+from healthapp.serializers import *
 from .models import *  # Adjust import based on your project structure
 
 
@@ -134,7 +137,7 @@ class AddDoctor(View):
             f.LOGIN=LoginTable.objects.create(Username=request.POST['UserName'],Password=request.POST['Password'],UserType='Doctor')
             f.HOSPITAL=HospitalTable.objects.get(LOGIN_id=request.session['login_id'])
             f.save()
-            return HttpResponse('''<script>alert("Your old password was entered incorrectly.Please enter it again."); window.location="/UpdateProfile";</script>''')
+            return HttpResponse('''<script>alert("Added Successfully"); window.location="/ManageDoctor";</script>''')
         
 
     
@@ -243,6 +246,18 @@ class ViewBooking(View):
         obj = BookingTable.objects.all()
         return render(request, "Doctor/ViewBooking.html",{'val':obj})
     
+def accept_booking(request, id):
+    booking = BookingTable.objects.get(id=id)
+    booking.Status = "Accepted"
+    booking.save()
+    return redirect('/ViewBooking')  # your booking list page
+
+def reject_booking(request, id):
+    booking = BookingTable.objects.get(id=id)
+    booking.Status = "Rejected"
+    booking.save()
+    return redirect('/ViewBooking')
+    
 class UpdateDrProfile(View):
     def get(self,request):
         obj = DoctorTable.objects.get(LOGIN__id=request.session['login_id'])
@@ -313,6 +328,518 @@ class DeleteSchedule(View):
         return redirect('ManageSchedule') 
     
 
-############################################################################
+#################################USER###########################################
+
+from rest_framework.views import APIView
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR, HTTP_201_CREATED
+from rest_framework.response import Response
+
+class UserRegApiView(APIView):
+    def post(self,request):
+        print('==================',request.data)
+        reg_serial=RegisterSerializer(data=request.data)
+        login_serial=LoginSerializer(data=request.data)
+
+        regvalid=reg_serial.is_valid()
+        loginvalid=login_serial.is_valid()
+
+        if regvalid and loginvalid:
+            login=login_serial.save(UserType='User')
+            reg_serial.save(LOGIN=login)
+            return Response({'message':'Registration successful'},status=HTTP_200_OK)
+        else:
+            return Response({'Registration error': reg_serial.errors if not regvalid else None,
+                             'login error': login_serial.errors if not loginvalid else None}, status=HTTP_400_BAD_REQUEST)
+        
+class loginApiView(APIView):
+    def post(self,request):
+        Response_dict={}
+        Username=request.data.get('Username')
+        Password=request.data.get('Password')
+        try:
+            if not Username or not Password:
+                return Response({'Response': 'Login failed'}, status=HTTP_400_BAD_REQUEST)
+            uname=LoginTable.objects.filter(Username=Username, Password=Password).first()
+            if not uname:
+                return Response({'Response':'login failed!'}, status=HTTP_400_BAD_REQUEST)
+            else:
+                Response_dict['message'] = 'login successful'
+                Response_dict['UserType'] = uname.UserType
+                Response_dict['userid'] = uname.id
+                return Response(Response_dict,status=HTTP_200_OK)
+        except Exception as e:
+            return Response({'Response':'internal server error'},status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class NearbyHospitalsAPIView(APIView):
+    def get(self, request):
+        try:
+            lat = request.query_params.get('latitude')
+            lon = request.query_params.get('longitude')
+
+            if not lat or not lon:
+                return Response({'error': 'Latitude and longitude are required'}, status=HTTP_400_BAD_REQUEST)
+
+            user_lat = float(lat)
+            user_lon = float(lon)
+
+            def haversine(lat1, lon1, lat2, lon2):
+                R = 6371  # Earth radius in kilometers
+                dlat = radians(lat2 - lat1)
+                dlon = radians(lon2 - lon1)
+                a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
+                c = 2 * atan2(sqrt(a), sqrt(1 - a))
+                return R * c
+
+            nearby_hospitals = []
+            for hospital in HospitalTable.objects.all():
+                if hospital.latitude and hospital.longitude:
+                    distance = haversine(user_lat, user_lon, hospital.latitude, hospital.longitude)
+                    if distance <= 5:
+                        nearby_hospitals.append({
+                            'id': hospital.id,
+                            'name': hospital.UserName,
+                            'email': hospital.E_mail,
+                            'phone': hospital.Phone,
+                            'address': hospital.Address,
+                            'city': hospital.City,
+                            'state': hospital.State,
+                            'pincode': hospital.Pincode,
+                            'latitude': hospital.latitude,
+                            'longitude': hospital.longitude,
+                            'image': hospital.Image.url if hospital.Image else None,
+                            'distance_km': round(distance, 2)
+                        })
+
+            return Response({'hospitals': nearby_hospitals}, status=HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=HTTP_400_BAD_REQUEST)
+        
 
 
+class DoctorsByHospitalAPIView(APIView):
+    def get(self, request, hospital_id):
+        try:
+            doctors = DoctorTable.objects.filter(HOSPITAL__id=hospital_id)
+            data = []
+            for doc in doctors:
+                data.append({
+                    'id':doc.id,
+                    'name': doc.UserName,
+                    'email': doc.E_mail,
+                    'phone': doc.Phone,
+                    'specialization': doc.Specialization,
+                    'experience': doc.Experience_year,
+                    'qualification': doc.Qualification,
+                })
+            return Response({'doctors': data}, status=HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=HTTP_400_BAD_REQUEST)
+
+        
+class SendComplaintsApView(APIView):
+    def get(self, request, id):
+        comp = ComplaintTable.objects.filter(USER__LOGIN_id=id)
+        hospital = HospitalTable.objects.all()
+        h_data = []
+        for hos in hospital:
+                h_data.append({
+                    'name': hos.UserName,
+                    'id': hos.id,
+                
+                })
+        serializer = ComplaintSerializer(comp, many=True)
+        return Response({
+            'complaints': serializer.data,
+            'hos': h_data
+        })    
+
+    def post(self,request,id):
+        print(request.data)
+        serializer = ComplaintSerializer(data=request.data)
+        user_obj = UserTable.objects.get(LOGIN_id=id)
+        if serializer.is_valid():
+            serializer.save(USER=user_obj)
+            return Response({'message': 'Complaint submit successfully'},status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+# class FeedbackApiView(APIView):
+#     def post(self, request, id):
+#         serializer = DoctorFeedbackSerializer(data = request.data)
+#         if serializer.is_valid():
+#             serializer.save(user_id=id)
+#             return Response({'message': 'Feedback sent successfully'},status=HTTP_201_CREATED)
+#         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+class BookAppointmentAPIView(APIView):
+    def post(self, request, id):
+        try:
+            user = UserTable.objects.get(LOGIN_id=id)
+        except UserTable.DoesNotExist:
+            return Response({'error': 'User not found'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data.copy()
+        serializer = BookingSerializer(data=data)
+
+        if serializer.is_valid():
+            booking = serializer.save(USER=user)
+            return Response({'message': 'Appointment booked successfully', 'booking_id': booking.id}, status=HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from datetime import datetime, timedelta
+from django.utils.dateparse import parse_time
+
+class DoctorAvailabilityView(APIView):
+    def get(self, request, doctor_id):
+        c = ScheduleTable.objects.filter(DOCTOR__id = doctor_id)
+        serializer = SchedulSerailizer(c,many=True)
+        print("--------------->", serializer.data)
+        return Response(serializer.data,status=HTTP_200_OK)
+    
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from .models import BookingTable, ScheduleTable, UserTable
+from datetime import datetime, timedelta
+
+class BookDoctor(APIView):
+    def post(self, request, lid):
+        print("Request data:", request.data)
+        user = UserTable.objects.get(LOGIN__id = lid)
+        c = BookDoctorSerializer(data = request.data)
+        
+        if c.is_valid():
+            c.save(USER=user,Status="Pending")
+            return Response(c.data, status=HTTP_200_OK)
+        
+class BookingHistory(APIView):
+    def get(self,request,lid):
+        c = BookingTable.objects.filter(USER__LOGIN__id = lid)
+        serializer = BookingHistorySerializer(c, many=True)
+        print("----------------", serializer.data)
+        return Response(serializer.data, status = HTTP_200_OK)
+
+class ViewPrescriptionAPI(APIView):
+    def get(self,request,id):
+        c = Prescription.objects.filter(BOOKING = id)
+        serializer = PrescriptionSerializer(c, many=True)
+        print(serializer.data)
+        return Response(serializer.data, status = HTTP_200_OK)
+    
+class ProfileView(APIView):
+    def get(self,request,lid):
+        c = UserTable.objects.get(LOGIN__id =lid)
+        serializer = ProfileSerializer(c)
+        return Response(serializer.data, status = HTTP_200_OK)
+    def put(self,request,lid):
+        user = UserTable.objects.get(LOGIN__id = lid)
+        serializer = ProfileSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print('------------------------', serializer.data)
+            return Response(serializer.data, status=HTTP_200_OK)
+        return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
+
+class FeedbackApi(APIView):
+    def post(self, request, lid):
+        print(request.data)
+        try:
+            c = UserTable.objects.get(LOGIN_id=lid)
+        except UserTable.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        d = DoctorFeedbackSerializer(data=request.data)
+
+        if d.is_valid():
+            d.save(USER=c)
+            return Response(d.data, status=status.HTTP_200_OK)
+        else:
+            return Response(d.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordApi(APIView):
+    def post(self,request,lid):
+        try:
+            # Get user login record
+            login_user = LoginTable.objects.get(id=lid)
+        except LoginTable.DoesNotExist: 
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
+
+        if not all([old_password, new_password, confirm_password]):
+            return Response({'error': 'All fields are required'}, status=HTTP_400_BAD_REQUEST)
+        
+        if login_user.Password != old_password:
+            return Response({'error': 'Old password is incorrect'}, status=HTTP_400_BAD_REQUEST)
+        
+        if new_password != confirm_password:
+            return Response({'error': 'New password and confirmation do not match'}, status=HTTP_400_BAD_REQUEST)
+        
+        login_user.Password = new_password
+        login_user.save()
+
+        return Response({'message': 'Password changed successfully'}, status=HTTP_200_OK)
+            
+
+
+# import google.generativeai as genai
+# from rest_framework import status
+
+# genai.configure(api_key="AIzaSyDUIK-os6NJ-zut8hSaAuIi49lgzct8ico")
+
+# #-----------------------------------CHATBOT API ----------------------------
+
+# class DiseaseChatbotApi(APIView):
+#     """
+#     AI-powered chatbot for disease prediction and treatment recommendations.
+#     Takes symptoms as input and returns possible conditions + recommendations.
+#     Stores chat history for each user.
+#     """
+
+#     def post(self,request,lid):
+#         print("=== Incoming Request ====")
+#         print("Request data:",request.data)
+#         print("User Login ID:",lid)
+
+#         # Step 1: Fetch User
+
+#         try:
+#             user = UserTable.objects.get(LOGIN_id=lid)
+#             print("User found:",user.UserName)
+#         except UserTable.DoesNotExist:
+#             print("User not found for Login ID:",lid)
+#             return Response(
+#                 {"error": "User not found"},
+#                 status=status.HTTP_404_NOT_FOUND
+#             )
+        
+#         # Step 2: Validate input
+
+#         symptoms = request.data.get("symptoms", "").strip()
+#         print ("Symptoms received:", symptoms)
+#         if not symptoms:
+#             print("No symptoms provided")
+#             return Response(
+#                 {"error": "Please provide your symptoms for analysis."},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             ) 
+        
+#         # STEP 3: Construct gemini prompt
+
+#         prompt = f"""
+#         You are a professional medical assistant AI. A patient reports  the following symptoms:
+#         "{symptoms}"
+
+#         Based on general medical knowledge:
+#         1. Predict the most likely possible disease or health condiotions.
+#         2. Provide a brief explanation for each possible disease.
+#         3. Suggest suitable treatment recommendation,including:
+#             - Initial home remedies
+#             - Over-the-counter medicine advice (if safe)
+#             - When the patient should seek medical attention
+#         4.Keep your tone empathetic, clear, and informative.
+
+#         Always end with this disclaimer:
+#         "⚠️ This is an AI-generated prediction.Please consult a licensed medical professional for accurate diagnosis and treatment."
+#         """
+#         print("Constructed Gemini prompt:\n", prompt)
+            
+#             # step 4:call gemini model safely
+#         try:
+#             model = genai.GenerativeModel("gemini-1.5-flash-latest")
+
+#             response = model.generate_content(prompt)
+#             print("Raw Gemini response:",response)
+
+#             ai_response = getattr(response, "text", None)
+#             if not ai_response:
+#                 print("No text in AI response")
+#                 return Response(
+#                     {"error": "Failed to generate AI response. Try again later."},
+#                     status=status.HTTP_502_BAD_GATEWAY
+#                 )
+            
+#             ai_response = ai_response.strip()
+#             print("Cleaned AI Response:",ai_response[:500] + ("..." if len(ai_response) > 500 else ""))
+        
+#         except Exception as e:
+#             print('------------>')
+#             print("Gemini API Error:", str(e))
+#             return Response(
+#                 {"error": f"Gemini API error: {str(e)}"},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+#         # step 5: store chat history
+#         try:
+#             chat = ChatHistory.objects.create(
+#                 user=user,
+#                 symptoms=symptoms,
+#                 ai_response=ai_response
+#             )
+#             print("chat history saved With ID:", chat.id)
+#         except Exception as e:
+#             print("Faile to save chat history:", str(e))
+
+#         # step 6: Return structured response
+#         data = {
+#             "user": user.UserName,
+#             "input_symptoms": symptoms,
+#             "prediction_result": ai_response
+
+#         }  
+
+#         print("Returning API response:",data)
+#         return Response(data, status=status.HTTP_200_OK)  
+
+
+    
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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"
+)
+
+class DiseaseChatbotApi(APIView):
+    """
+    AI-powered chatbot for disease prediction and treatment recommendations.
+    Takes symptoms as input and returns possible conditions + recommendations.
+    Stores chat history for each user.
+    """
+
+    def post(self, request, lid):
+        print("=== Incoming Request ====")
+        print("Request data:", request.data)
+        print("User Login ID:", lid)
+
+        # Step 1: Fetch User
+        try:
+            user = UserTable.objects.get(LOGIN_id=lid)
+            print("User found:", user.UserName)
+        except UserTable.DoesNotExist:
+            print("User not found")
+            return Response(
+                {"error": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Step 2: Validate symptoms input
+        symptoms = request.data.get("symptoms", "").strip()
+        print("Symptoms received:", symptoms)
+
+        if not symptoms:
+            return Response(
+                {"error": "Please provide your symptoms."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Step 3: Build clean prompt
+        prompt = f"""
+You are a professional medical assistant AI. A patient reports these symptoms:
+"{symptoms}"
+
+Based on general medical knowledge:
+1. Predict likely possible diseases or conditions.
+2. Explain briefly why each disease is possible.
+3. Recommend:
+   - Safe home remedies
+   - Over-the-counter medicines (if safe)
+   - When they must seek medical attention
+4. Respond in an empathetic, clear, and helpful tone.
+
+End with:
+"⚠️ This is an AI-generated prediction. Consult a licensed medical professional for an accurate diagnosis."
+"""
+        print("Constructed Prompt:", prompt)
+
+        # Step 4: Call OpenRouter safely
+        try:
+            response = client.chat.completions.create(
+                model="openai/gpt-4.1-mini",
+                max_tokens=800,
+                temperature=0.7,
+                messages=[
+                    {"role": "system", "content": "You are a medical assistant AI."},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            # Correct extraction
+            ai_response = response.choices[0].message.content.strip()
+
+            # REMOVE ALL * SYMBOLS
+            ai_response = ai_response.replace("*", "")
+
+            print("Cleaned AI Response:", ai_response)
+
+        except Exception as e:
+            print("OpenRouter API Error:", str(e))
+            return Response(
+                {"error": f"AI service error: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        # Step 5: Save chat history
+        try:
+            chat = ChatHistory.objects.create(
+                user=user,
+                symptoms=symptoms,
+                ai_response=ai_response
+            )
+            print("Chat history saved! ID:", chat.id)
+        except Exception as e:
+            print("Chat save error:", str(e))
+
+        # Step 6: Return final response
+        data = {
+            "user": user.UserName,
+            "input_symptoms": symptoms,
+            "prediction_result": ai_response
+        }
+
+        print("Returning API Response:", data)
+        return Response(data, status=status.HTTP_200_OK)
+    
+
+
+class AllHospitalsAPIView(APIView):
+    def get(self, request):
+        try:
+            hospitals = HospitalTable.objects.all()
+
+            hospital_list = []
+
+            for hospital in hospitals:
+                hospital_list.append({
+                    'id': hospital.id,
+                    'name': hospital.UserName,
+                    'email': hospital.E_mail,
+                    'phone': hospital.Phone,
+                    'address': hospital.Address,
+                    'city': hospital.City,
+                    'state': hospital.State,
+                    'pincode': hospital.Pincode,
+                    'latitude': hospital.latitude,
+                    'longitude': hospital.longitude,
+                    'image': hospital.Image.url if hospital.Image else None,
+                })
+
+            return Response({
+                'count': hospitals.count(),
+                'hospitals': hospital_list
+            }, status=HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
